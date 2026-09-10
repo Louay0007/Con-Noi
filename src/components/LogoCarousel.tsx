@@ -23,19 +23,22 @@ export function LogoCarousel() {
         role="region"
         aria-label="Healthcare partners"
       >
-        <div className="logo-marquee-track flex w-max shrink-0 items-center">
-          {[...partners, ...partners].map((partner, index) => (
-            <div
-              key={`${partner.name}-${index}`}
-              className="flex w-[180px] shrink-0 items-center justify-center px-8 sm:w-[220px] sm:px-10"
-              aria-hidden={index >= partners.length}
-            >
-              <img
-                src={partner.logo}
-                alt={index < partners.length ? partner.name : ""}
-                className="h-8 max-w-[130px] object-contain opacity-70 grayscale transition-opacity duration-300 hover:opacity-100 sm:h-9 sm:max-w-[150px]"
-                loading="eager"
-              />
+        <div className="logo-marquee-track flex w-max shrink-0 items-center will-change-transform">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex shrink-0 items-center" aria-hidden={copy === 1}>
+              {partners.map((partner) => (
+                <div
+                  key={`${copy}-${partner.name}`}
+                  className="flex w-[180px] shrink-0 items-center justify-center px-8 sm:w-[220px] sm:px-10"
+                >
+                  <img
+                    src={partner.logo}
+                    alt={copy === 0 ? partner.name : ""}
+                    className="h-8 max-w-[130px] object-contain opacity-70 grayscale transition-opacity duration-300 hover:opacity-100 sm:h-9 sm:max-w-[150px]"
+                    loading="eager"
+                  />
+                </div>
+              ))}
             </div>
           ))}
         </div>

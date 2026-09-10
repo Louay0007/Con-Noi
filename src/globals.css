@@ -168,30 +168,28 @@
   .logo-marquee::after {
     content: "";
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     bottom: 0;
-    width: min(12vw, 160px);
+    width: clamp(72px, 14vw, 200px);
     pointer-events: none;
   }
   .logo-marquee::before {
     left: 0;
-    background: linear-gradient(to right, #ffffff, transparent);
+    background: linear-gradient(to right, #ffffff 10%, rgba(255,255,255,.92) 35%, transparent 100%);
   }
   .logo-marquee::after {
     right: 0;
-    background: linear-gradient(to left, #ffffff, transparent);
+    background: linear-gradient(to left, #ffffff 10%, rgba(255,255,255,.92) 35%, transparent 100%);
   }
   .logo-marquee-track {
     animation: logo-marquee 28s linear infinite;
   }
-  .logo-marquee:hover .logo-marquee-track {
-    animation-play-state: paused;
-  }
 }
 
 @keyframes logo-marquee {
-  to { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
