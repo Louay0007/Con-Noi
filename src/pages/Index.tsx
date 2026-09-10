@@ -1,3 +1,4 @@
+import { LogoCarousel } from "@/components/LogoCarousel";
 import { MediterraHeader } from "@/components/MediterraHeader";
 import { MediterraHeroCopy } from "@/components/MediterraHeroCopy";
 
@@ -12,6 +13,7 @@ const Index = () => {
       >
         <MediterraHeroCopy />
       </section>
+      <LogoCarousel />
       <section
         id="future-content"
         aria-label="Reserved for future content"

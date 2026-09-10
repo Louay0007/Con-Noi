@@ -164,4 +164,38 @@
     backdrop-filter: blur(30px) saturate(170%);
     -webkit-backdrop-filter: blur(30px) saturate(170%);
   }
+  .logo-marquee::before,
+  .logo-marquee::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    width: min(12vw, 160px);
+    pointer-events: none;
+  }
+  .logo-marquee::before {
+    left: 0;
+    background: linear-gradient(to right, #f2f2f0, transparent);
+  }
+  .logo-marquee::after {
+    right: 0;
+    background: linear-gradient(to left, #f2f2f0, transparent);
+  }
+  .logo-marquee-track {
+    animation: logo-marquee 28s linear infinite;
+  }
+  .logo-marquee:hover .logo-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes logo-marquee {
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-marquee-track {
+    animation-play-state: paused;
+  }
 }
