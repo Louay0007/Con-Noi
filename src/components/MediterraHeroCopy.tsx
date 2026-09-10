@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { MediterraLogo } from "./MediterraLogo";
 
 const headline = "Care connected across borders".split(" ");
+const description = "Connecting Tunisia’s care teams with trusted specialist expertise, coordinated action, and continuous human support.".split(" ");
 
 export function MediterraHeroCopy() {
   const root = useRef<HTMLDivElement>(null);
@@ -25,7 +26,12 @@ export function MediterraHeroCopy() {
           { opacity: 1, yPercent: 0, rotateX: 0, duration: 0.82, stagger: 0.1 },
           "-=0.35",
         )
-        .fromTo("[data-hero-description]", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.75 }, "-=0.32");
+        .fromTo(
+          "[data-hero-description-word]",
+          { opacity: 0, yPercent: 90 },
+          { opacity: 1, yPercent: 0, duration: 0.5, stagger: 0.035 },
+          "-=0.22",
+        );
     }, root);
 
     return () => context.revert();
@@ -46,8 +52,14 @@ export function MediterraHeroCopy() {
             </span>
           ))}
         </h1>
-        <p data-hero-description data-hero-reveal className="mx-auto mt-4 max-w-[570px] text-[15px] font-medium leading-[1.5] tracking-[-0.018em] text-white/[0.82] opacity-0 [text-shadow:0_1px_14px_rgba(7,41,80,0.3)] sm:text-[17px]">
-          Connecting Tunisia’s care teams with trusted specialist expertise, coordinated action, and continuous human support.
+        <p className="mx-auto mt-4 max-w-[570px] text-[15px] font-medium leading-[1.5] tracking-[-0.018em] text-white/[0.82] [text-shadow:0_1px_14px_rgba(7,41,80,0.3)] sm:text-[17px]">
+          {description.map((word, index) => (
+            <span key={`${word}-${index}`} className="mr-[0.24em] inline-block overflow-hidden align-top last:mr-0">
+              <span data-hero-description-word data-hero-reveal className="inline-block opacity-0">
+                {word}
+              </span>
+            </span>
+          ))}
         </p>
       </div>
     </div>
