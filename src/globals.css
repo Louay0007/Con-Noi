@@ -1,101 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=Geist:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --color-signal-blue: #3c83f6;
+    --color-deep-dusk: #022c70;
+    --color-azure-crest: #0544a5;
+    --color-hover-glow: #81b6ff;
+    --color-ink-black: #000000;
+    --color-carbon: #18181b;
+    --color-slate: #2e3038;
+    --color-steel: #5e616e;
+    --color-fog: #777a88;
+    --color-mist: #afb3c4;
+    --color-vapor: #edeef2;
+    --color-frost: #f3f8ff;
+    --color-chalk: #ffffff;
+    --color-bone: #e4e4e7;
+    --color-ash: #d7d7d7;
+    --color-neon: #00ff26;
+    --color-cyan-veil: #7df0f8;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --font-eb-garamond: 'EB Garamond', Georgia, serif;
+    --font-geist: 'Geist', Inter, ui-sans-serif, system-ui, sans-serif;
+    --font-ui-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --text-caption: 10px;
+    --leading-caption: 1.5;
+    --text-body: 16px;
+    --leading-body: 1.5;
+    --tracking-body: -0.01em;
+    --text-subheading: 20px;
+    --leading-subheading: 1.38;
+    --tracking-subheading: -0.018em;
+    --text-heading-sm: 28px;
+    --leading-heading-sm: 1.25;
+    --tracking-heading-sm: -0.025em;
+    --text-heading: 36px;
+    --leading-heading: 1.2;
+    --tracking-heading: -0.031em;
+    --text-heading-lg: 48px;
+    --leading-heading-lg: 1.13;
+    --tracking-heading-lg: -0.036em;
+    --text-display: 80px;
+    --leading-display: 1.02;
+    --tracking-display: -0.012em;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --spacing-4: 4px;
+    --spacing-5: 5px;
+    --spacing-6: 6px;
+    --spacing-7: 7px;
+    --spacing-8: 8px;
+    --spacing-9: 9px;
+    --spacing-10: 10px;
+    --spacing-12: 12px;
+    --spacing-14: 14px;
+    --spacing-16: 16px;
+    --spacing-18: 18px;
+    --spacing-20: 20px;
+    --spacing-28: 28px;
+    --spacing-32: 32px;
+    --spacing-40: 40px;
+    --spacing-73: 73px;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --page-max-width: 1200px;
+    --section-gap: 64px;
+    --card-padding: 24px;
+    --element-gap: 8px;
 
     --radius: 0.5rem;
+    --radius-md: 4px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-2xl: 16px;
+    --radius-3xl: 24px;
+    --radius-3xl-2: 32px;
+    --radius-full: 9999px;
+    --radius-cards: 12px;
+    --radius-pills: 9999px;
+    --radius-inputs: 8px;
+    --radius-buttons: 4px;
+    --radius-feature-cards: 24px;
+    --radius-product-mockup: 16px;
 
+    --shadow-subtle: 0 0 0 0.5px #0544a9, inset 0 -1px 0 #022c70, inset 0 0.5px 0 #81b6ff;
+    --shadow-subtle-2: 0 0 0 1px rgba(207, 226, 255, 0.24), 0 -0.5px 0 rgba(255, 255, 255, 0.8);
+    --shadow-subtle-3: inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+    --shadow-lg: inset 0 2px 20px -1px rgba(0, 0, 0, 0.05);
+    --shadow-lg-2: 20px 20px 24px rgba(148, 172, 243, 0.4), inset -3px -3px 4px rgba(191, 229, 251, 0.4), inset 4px 4px 4px rgba(19, 26, 228, 0.1);
+
+    --surface-canvas: #ffffff;
+    --surface-frost-tint: #f3f8ff;
+    --surface-vapor-layer: #edeef2;
+    --surface-bone-border: #e4e4e7;
+
+    --background: 0 0% 100%;
+    --foreground: 240 5% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 5% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 5% 10%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 12% 94%;
+    --secondary-foreground: 228 10% 20%;
+    --muted: 214 100% 98%;
+    --muted-foreground: 228 8% 40%;
+    --accent: 214 100% 98%;
+    --accent-foreground: 228 10% 20%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 217 91% 60%;
     --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-foreground: 240 5% 26%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 214 100% 98%;
+    --sidebar-accent-foreground: 228 10% 20%;
+    --sidebar-border: 240 6% 90%;
+    --sidebar-ring: 217 91% 60%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    min-width: 320px;
+    font-family: var(--font-geist);
+  }
+
+  ::selection {
+    background: rgba(60, 131, 246, 0.2);
+  }
+}
+
+@layer components {
+  .bluecrest-container {
+    width: min(calc(100% - 40px), var(--page-max-width));
+    margin-inline: auto;
+  }
+
+  .bluecrest-focus {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-blue focus-visible:ring-offset-2;
   }
 }
