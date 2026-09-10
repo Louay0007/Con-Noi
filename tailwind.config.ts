@@ -49,8 +49,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["var(--font-geist)"],
-        display: ["var(--font-eb-garamond)"],
+        sans: ["var(--font-sf-pro-display)"],
+        display: ["var(--font-sf-pro-display)"],
         mono: ["var(--font-ui-monospace)"],
       },
       maxWidth: { page: "var(--page-max-width)" },

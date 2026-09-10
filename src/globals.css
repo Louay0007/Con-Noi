@@ -1,53 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=Geist:wght@300;400;500;600&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --color-signal-blue: #3c83f6;
-    --color-deep-dusk: #022c70;
-    --color-azure-crest: #0544a5;
-    --color-hover-glow: #81b6ff;
+    --color-signal-blue: #0a84ff;
+    --color-deep-dusk: #001b45;
+    --color-azure-crest: #0066cc;
+    --color-hover-glow: #9bd0ff;
     --color-ink-black: #000000;
-    --color-carbon: #18181b;
-    --color-slate: #2e3038;
-    --color-steel: #5e616e;
-    --color-fog: #777a88;
-    --color-mist: #afb3c4;
-    --color-vapor: #edeef2;
-    --color-frost: #f3f8ff;
+    --color-carbon: #1d1d1f;
+    --color-slate: #34343a;
+    --color-steel: #6e6e73;
+    --color-fog: #8e8e93;
+    --color-mist: #aeaeb2;
+    --color-vapor: #f2f2f7;
+    --color-frost: #f5f9ff;
     --color-chalk: #ffffff;
-    --color-bone: #e4e4e7;
-    --color-ash: #d7d7d7;
-    --color-neon: #00ff26;
-    --color-cyan-veil: #7df0f8;
+    --color-bone: rgba(60, 60, 67, 0.14);
+    --color-ash: rgba(60, 60, 67, 0.22);
+    --color-neon: #30d158;
+    --color-cyan-veil: #64d2ff;
 
-    --font-eb-garamond: 'EB Garamond', Georgia, serif;
-    --font-geist: 'Geist', Inter, ui-sans-serif, system-ui, sans-serif;
-    --font-ui-monospace: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --font-sf-pro-display: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    --font-eb-garamond: var(--font-sf-pro-display);
+    --font-geist: var(--font-sf-pro-display);
+    --font-ui-monospace: "SFMono-Regular", ui-monospace, Menlo, Monaco, Consolas, monospace;
 
-    --text-caption: 10px;
-    --leading-caption: 1.5;
-    --text-body: 16px;
-    --leading-body: 1.5;
-    --tracking-body: -0.01em;
-    --text-subheading: 20px;
-    --leading-subheading: 1.38;
-    --tracking-subheading: -0.018em;
+    --text-caption: 11px;
+    --leading-caption: 1.35;
+    --text-body: 17px;
+    --leading-body: 1.47;
+    --tracking-body: -0.022em;
+    --text-subheading: 21px;
+    --leading-subheading: 1.28;
+    --tracking-subheading: -0.025em;
     --text-heading-sm: 28px;
-    --leading-heading-sm: 1.25;
-    --tracking-heading-sm: -0.025em;
-    --text-heading: 36px;
-    --leading-heading: 1.2;
-    --tracking-heading: -0.031em;
-    --text-heading-lg: 48px;
-    --leading-heading-lg: 1.13;
-    --tracking-heading-lg: -0.036em;
-    --text-display: 80px;
-    --leading-display: 1.02;
-    --tracking-display: -0.012em;
+    --leading-heading-sm: 1.18;
+    --tracking-heading-sm: -0.035em;
+    --text-heading: 40px;
+    --leading-heading: 1.1;
+    --tracking-heading: -0.04em;
+    --text-heading-lg: 56px;
+    --leading-heading-lg: 1.04;
+    --tracking-heading-lg: -0.045em;
+    --text-display: 88px;
+    --leading-display: 0.98;
+    --tracking-display: -0.055em;
 
     --font-weight-light: 300;
     --font-weight-regular: 400;
@@ -72,82 +71,75 @@
     --spacing-73: 73px;
 
     --page-max-width: 1200px;
-    --section-gap: 64px;
+    --section-gap: 72px;
     --card-padding: 24px;
     --element-gap: 8px;
 
-    --radius: 0.5rem;
-    --radius-md: 4px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
-    --radius-2xl: 16px;
-    --radius-3xl: 24px;
-    --radius-3xl-2: 32px;
+    --radius: 1.25rem;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-3xl: 30px;
+    --radius-3xl-2: 36px;
     --radius-full: 9999px;
-    --radius-cards: 12px;
+    --radius-cards: 22px;
     --radius-pills: 9999px;
-    --radius-inputs: 8px;
-    --radius-buttons: 4px;
-    --radius-feature-cards: 24px;
-    --radius-product-mockup: 16px;
+    --radius-inputs: 14px;
+    --radius-buttons: 9999px;
+    --radius-feature-cards: 30px;
+    --radius-product-mockup: 26px;
 
-    --shadow-subtle: 0 0 0 0.5px #0544a9, inset 0 -1px 0 #022c70, inset 0 0.5px 0 #81b6ff;
-    --shadow-subtle-2: 0 0 0 1px rgba(207, 226, 255, 0.24), 0 -0.5px 0 rgba(255, 255, 255, 0.8);
-    --shadow-subtle-3: inset 0 -1px 0 rgba(255, 255, 255, 0.25);
-    --shadow-lg: inset 0 2px 20px -1px rgba(0, 0, 0, 0.05);
-    --shadow-lg-2: 20px 20px 24px rgba(148, 172, 243, 0.4), inset -3px -3px 4px rgba(191, 229, 251, 0.4), inset 4px 4px 4px rgba(19, 26, 228, 0.1);
+    --shadow-subtle: inset 0 1px 0 rgba(255,255,255,.5), 0 8px 24px rgba(0,75,180,.22);
+    --shadow-subtle-2: inset 0 1px 0 rgba(255,255,255,.28), 0 24px 70px rgba(0,25,80,.28);
+    --shadow-subtle-3: inset 0 1px 0 rgba(255,255,255,.42);
+    --shadow-lg: inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 24px rgba(255,255,255,.03);
+    --shadow-lg-2: inset 0 1px 0 rgba(255,255,255,.8), 0 20px 50px rgba(45,80,130,.14);
 
     --surface-canvas: #ffffff;
-    --surface-frost-tint: #f3f8ff;
-    --surface-vapor-layer: #edeef2;
-    --surface-bone-border: #e4e4e7;
+    --surface-frost-tint: #f5f9ff;
+    --surface-vapor-layer: #f2f2f7;
+    --surface-bone-border: rgba(60, 60, 67, 0.14);
 
     --background: 0 0% 100%;
-    --foreground: 240 5% 10%;
+    --foreground: 240 3% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 240 5% 10%;
+    --card-foreground: 240 3% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 5% 10%;
-    --primary: 217 91% 60%;
+    --popover-foreground: 240 3% 12%;
+    --primary: 210 100% 52%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 220 12% 94%;
-    --secondary-foreground: 228 10% 20%;
-    --muted: 214 100% 98%;
-    --muted-foreground: 228 8% 40%;
-    --accent: 214 100% 98%;
-    --accent-foreground: 228 10% 20%;
-    --destructive: 0 72% 51%;
+    --secondary: 240 24% 96%;
+    --secondary-foreground: 240 3% 12%;
+    --muted: 213 100% 98%;
+    --muted-foreground: 240 2% 44%;
+    --accent: 213 100% 98%;
+    --accent-foreground: 240 3% 12%;
+    --destructive: 3 100% 59%;
     --destructive-foreground: 0 0% 100%;
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
-    --ring: 217 91% 60%;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5% 26%;
-    --sidebar-primary: 217 91% 60%;
+    --border: 240 6% 87%;
+    --input: 240 6% 87%;
+    --ring: 210 100% 52%;
+    --sidebar-background: 240 24% 97%;
+    --sidebar-foreground: 240 3% 20%;
+    --sidebar-primary: 210 100% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 214 100% 98%;
-    --sidebar-accent-foreground: 228 10% 20%;
-    --sidebar-border: 240 6% 90%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-accent: 213 100% 98%;
+    --sidebar-accent-foreground: 240 3% 12%;
+    --sidebar-border: 240 6% 87%;
+    --sidebar-ring: 210 100% 52%;
   }
 
-  * {
-    @apply border-border;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
   body {
     @apply bg-background text-foreground antialiased;
     min-width: 320px;
-    font-family: var(--font-geist);
+    font-family: var(--font-sf-pro-display);
+    letter-spacing: -0.015em;
   }
-
-  ::selection {
-    background: rgba(60, 131, 246, 0.2);
-  }
+  button, input, textarea, select { font: inherit; }
+  ::selection { background: rgba(10, 132, 255, 0.22); }
 }
 
 @layer components {
@@ -155,8 +147,21 @@
     width: min(calc(100% - 40px), var(--page-max-width));
     margin-inline: auto;
   }
-
   .bluecrest-focus {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-blue focus-visible:ring-offset-2;
+  }
+  .liquid-glass {
+    background: linear-gradient(145deg, rgba(255,255,255,.66), rgba(255,255,255,.32));
+    border: 1px solid rgba(255,255,255,.58);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.88), 0 18px 55px rgba(30,70,130,.12);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+  }
+  .liquid-glass-dark {
+    background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+    border: 1px solid rgba(255,255,255,.22);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 24px 70px rgba(0,23,70,.24);
+    backdrop-filter: blur(30px) saturate(170%);
+    -webkit-backdrop-filter: blur(30px) saturate(170%);
   }
 }
