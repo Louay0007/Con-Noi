@@ -208,9 +208,11 @@ export function MediterraCareRelay() {
                   <span className={styles.chapterNumber}>0{index + 1}</span>
                   <h3>{chapter.title}</h3>
                   <p>{chapter.body}</p>
-                  {index === chapters.length - 1 && <a data-relay-cta className={styles.cta} href="#future-content">Explore Mediterra Bridge</a>}
                 </article>
               ))}
+            </div>
+            <div className={styles.ctaRow}>
+              <a data-relay-cta className={styles.cta} href="#future-content">Explore Mediterra Bridge</a>
             </div>
           </div>
 
@@ -223,9 +225,11 @@ export function MediterraCareRelay() {
                   <p>{chapter.body}</p>
                 </div>
                 <RelayVisual mobile />
-                {index === chapters.length - 1 && <a className={`${styles.cta} ${styles.mobileCta}`} href="#future-content">Explore Mediterra Bridge</a>}
               </article>
             ))}
+          </div>
+          <div className={styles.mobileCtaRow}>
+            <a className={`${styles.cta} ${styles.mobileCta}`} href="#future-content">Explore Mediterra Bridge</a>
           </div>
         </div>
       </div>
