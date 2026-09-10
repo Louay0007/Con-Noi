@@ -1,6 +1,7 @@
 import { LogoCarousel } from "@/components/LogoCarousel";
 import { MediterraHeader } from "@/components/MediterraHeader";
 import { MediterraHeroCopy } from "@/components/MediterraHeroCopy";
+import { WorkflowSection } from "@/components/WorkflowSection";
 
 const Index = () => {
   return (
@@ -14,6 +15,7 @@ const Index = () => {
         <MediterraHeroCopy />
       </section>
       <LogoCarousel />
+      <WorkflowSection />
       <section
         id="future-content"
         aria-label="Reserved for future content"
