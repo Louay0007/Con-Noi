@@ -40,6 +40,7 @@ function RelayAsset({ name, className, eager = false }: { name: AssetKey; classN
           width={asset.width}
           height={asset.height}
           alt=""
+          className={styles.imageFade}
           loading={eager ? "eager" : "lazy"}
           onError={handleError}
         />
