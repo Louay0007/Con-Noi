@@ -11,7 +11,7 @@ const partners = [
 
 export function LogoCarousel() {
   return (
-    <section className="overflow-hidden bg-[#f2f2f0] py-12 sm:py-14" aria-labelledby="partners-heading">
+    <section className="overflow-hidden bg-white py-12 sm:py-14" aria-labelledby="partners-heading">
       <div className="bluecrest-container">
         <p id="partners-heading" className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8b8d91]">
           Trusted healthcare ecosystem
