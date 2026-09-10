@@ -72,8 +72,6 @@ export function WorkflowSection() {
       aria-labelledby="workflow-heading"
       className="relative overflow-hidden bg-white py-24 font-sans sm:py-28 lg:py-32"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(ellipse_at_50%_0%,#f3f8ff_0%,rgba(243,248,255,0.72)_38%,rgba(255,255,255,0)_75%)]" />
-
       <div className="bluecrest-container relative">
         <div className="mx-auto max-w-[810px] text-center">
           <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#0a84ff]">
