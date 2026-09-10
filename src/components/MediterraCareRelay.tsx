@@ -15,7 +15,7 @@ const chapters = [
 ];
 
 const assets = {
-  landscape: { src: "/images/care-relay/mediterranean-landscape.webp", file: "mediterranean-landscape.webp", width: 1600, height: 1200 },
+  landscape: { src: "/images/care-relay/mediterranean-landscape.png", file: "mediterranean-landscape.png", width: 1600, height: 1200 },
   clinic: { src: "/images/care-relay/local-clinic.png", file: "local-clinic.png", width: 768, height: 768 },
   documents: { src: "/images/care-relay/case-documents.png", file: "case-documents.png", width: 1024, height: 768 },
   specialist: { src: "/images/care-relay/specialist-node.png", file: "specialist-node.png", width: 768, height: 768 },
