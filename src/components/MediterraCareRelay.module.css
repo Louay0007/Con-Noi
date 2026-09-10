@@ -64,16 +64,14 @@
 
 .storyArea {
   position: relative;
-  min-height: 214px;
-  margin-top: 38px;
-  overflow: hidden;
+  margin-top: 28px;
 }
 
 .rail {
   position: relative;
   width: calc(100% - 8px);
   height: 28px;
-  margin: 0 4px 22px;
+  margin: 0 4px 18px;
 }
 
 .railBase,
@@ -127,20 +125,33 @@
   background: #3c83f6;
 }
 
-.chapterStack { position: relative; min-height: 164px; overflow: hidden; }
+.chapterStack {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
 .chapter {
-  position: absolute;
-  inset: 0;
-  opacity: .4;
+  position: relative;
+  min-height: 184px;
+  padding: 18px;
+  border: 1px solid #e4e4e7;
+  border-radius: 16px;
+  background: #fff;
   color: #777a88;
-  transform: translateX(20px);
-  pointer-events: none;
+  opacity: .4;
+  transform: translateX(0);
+  transition: border-color .25s ease, background-color .25s ease;
 }
 
 .chapter:first-child {
   opacity: 1;
   color: #18181b;
   transform: translateX(0);
+}
+
+.chapter[aria-current="step"] {
+  border-color: #b8d3fb;
+  background: #f3f8ff;
 }
 
 .chapterNumber {
@@ -152,16 +163,15 @@
 
 .chapter h3 {
   margin-top: 10px;
-  font-size: 25px;
+  font-size: 18px;
   font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -.035em;
+  line-height: 1.18;
+  letter-spacing: -.028em;
 }
 
 .chapter p {
-  max-width: 430px;
   margin-top: 10px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.5;
 }
 

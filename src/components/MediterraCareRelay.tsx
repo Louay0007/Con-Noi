@@ -189,28 +189,28 @@ export function MediterraCareRelay() {
               <p className={styles.eyebrow}>From signal to action</p>
               <h2 id="care-relay-heading" className={styles.heading}>Care moves when the right person sees the right signal.</h2>
               <p className={styles.intro}>Mediterra transforms fragmented clinical needs into clear, accountable actions—connecting local teams, trusted expertise, and continuous follow-up.</p>
-
-              <div className={styles.storyArea}>
-                <div className={styles.rail} aria-label={`Step ${activeChapter + 1} of ${chapters.length}`}>
-                  <span className={styles.railBase} />
-                  <span data-rail-active className={styles.railActive} />
-                  {chapters.map((_, index) => (
-                    <span key={index} className={`${styles.marker} ${index === activeChapter ? styles.markerCurrent : ""}`} style={{ left: `${(index / 4) * 100}%` }} aria-hidden="true">0{index + 1}</span>
-                  ))}
-                </div>
-                <div className={styles.chapterStack}>
-                  {chapters.map((chapter, index) => (
-                    <article key={chapter.title} data-chapter className={styles.chapter} aria-current={index === activeChapter ? "step" : "false"}>
-                      <span className={styles.chapterNumber}>0{index + 1}</span>
-                      <h3>{chapter.title}</h3>
-                      <p>{chapter.body}</p>
-                      {index === chapters.length - 1 && <a data-relay-cta className={styles.cta} href="#future-content">Explore Mediterra Bridge</a>}
-                    </article>
-                  ))}
-                </div>
-              </div>
             </div>
             <RelayVisual />
+          </div>
+
+          <div className={styles.storyArea}>
+            <div className={styles.rail} aria-label={`Step ${activeChapter + 1} of ${chapters.length}`}>
+              <span className={styles.railBase} />
+              <span data-rail-active className={styles.railActive} />
+              {chapters.map((_, index) => (
+                <span key={index} className={`${styles.marker} ${index === activeChapter ? styles.markerCurrent : ""}`} style={{ left: `${(index / 4) * 100}%` }} aria-hidden="true">0{index + 1}</span>
+              ))}
+            </div>
+            <div className={styles.chapterStack}>
+              {chapters.map((chapter, index) => (
+                <article key={chapter.title} data-chapter className={styles.chapter} aria-current={index === activeChapter ? "step" : "false"}>
+                  <span className={styles.chapterNumber}>0{index + 1}</span>
+                  <h3>{chapter.title}</h3>
+                  <p>{chapter.body}</p>
+                  {index === chapters.length - 1 && <a data-relay-cta className={styles.cta} href="#future-content">Explore Mediterra Bridge</a>}
+                </article>
+              ))}
+            </div>
           </div>
 
           <div className={styles.mobileStories}>
