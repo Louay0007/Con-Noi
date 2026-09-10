@@ -1,4 +1,5 @@
 import { LogoCarousel } from "@/components/LogoCarousel";
+import { MediterraCareRelay } from "@/components/MediterraCareRelay";
 import { MediterraHeader } from "@/components/MediterraHeader";
 import { MediterraHeroCopy } from "@/components/MediterraHeroCopy";
 import { WorkflowSection } from "@/components/WorkflowSection";
@@ -15,6 +16,7 @@ const Index = () => {
         <MediterraHeroCopy />
       </section>
       <LogoCarousel />
+      <MediterraCareRelay />
       <WorkflowSection />
       <section
         id="future-content"
