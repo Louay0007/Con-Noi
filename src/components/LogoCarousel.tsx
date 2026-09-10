@@ -1,3 +1,6 @@
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+
 const partners = [
   { name: "Siemens", logo: "https://cdn.simpleicons.org/siemens/73777C" },
   { name: "Roche", logo: "https://cdn.simpleicons.org/roche/73777C" },
@@ -10,6 +13,28 @@ const partners = [
 ];
 
 export function LogoCarousel() {
+  const marquee = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!track.current) return;
+
+    const context = gsap.context(() => {
+      gsap.fromTo(
+        track.current,
+        { xPercent: 0 },
+        {
+          xPercent: -50,
+          duration: 24,
+          ease: "none",
+          repeat: -1,
+        },
+      );
+    }, marquee);
+
+    return () => context.revert();
+  }, []);
+
   return (
     <section className="overflow-hidden bg-white py-12 sm:py-14" aria-labelledby="partners-heading">
       <div className="bluecrest-container">
@@ -19,11 +44,12 @@ export function LogoCarousel() {
       </div>
 
       <div
+        ref={marquee}
         className="logo-marquee relative mt-9 flex overflow-hidden"
         role="region"
         aria-label="Healthcare partners"
       >
-        <div className="logo-marquee-track flex w-max shrink-0 items-center will-change-transform">
+        <div ref={track} className="flex w-max shrink-0 items-center will-change-transform">
           {[0, 1].map((copy) => (
             <div key={copy} className="flex shrink-0 items-center" aria-hidden={copy === 1}>
               {partners.map((partner) => (
