@@ -1,4 +1,5 @@
 import { MediterraHeader } from "@/components/MediterraHeader";
+import { MediterraHeroCopy } from "@/components/MediterraHeroCopy";
 
 const Index = () => {
   return (
@@ -8,7 +9,9 @@ const Index = () => {
         aria-label="Mediterranean coastal landscape"
         className="min-h-screen w-full bg-white bg-cover bg-top bg-no-repeat md:bg-center"
         style={{ backgroundImage: "url('/mediterra-hero.png')" }}
-      />
+      >
+        <MediterraHeroCopy />
+      </section>
       <section
         id="future-content"
         aria-label="Reserved for future content"

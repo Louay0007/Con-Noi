@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { MediterraLogo } from "./MediterraLogo";
 
-const navigation = ["Discover", "Destinations", "About"];
+const navigation = ["Bridge", "Care", "About"];
 
 export function MediterraHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,7 +24,7 @@ export function MediterraHeader() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 motion-reduce:duration-0",
         isScrolled
-          ? "border-black/[0.07] bg-white/68 shadow-[0_8px_30px_rgba(35,70,105,0.08)] backdrop-blur-2xl backdrop-saturate-150"
+          ? "border-black/[0.07] bg-white/[0.68] shadow-[0_8px_30px_rgba(35,70,105,0.08)] backdrop-blur-2xl backdrop-saturate-150"
           : "border-transparent bg-transparent shadow-none backdrop-blur-none",
       )}
     >
@@ -32,11 +33,11 @@ export function MediterraHeader() {
           href="#top"
           aria-label="Mediterra home"
           className={cn(
-            "bluecrest-focus inline-flex h-9 w-[138px] items-center rounded-lg transition-colors duration-500 motion-reduce:duration-0",
+            "bluecrest-focus inline-flex h-9 w-[148px] items-center rounded-lg transition-colors duration-500 motion-reduce:duration-0",
             isScrolled ? "text-carbon" : "text-white [text-shadow:0_1px_10px_rgba(0,31,73,0.34)]",
           )}
         >
-          <span className="text-[18px] font-semibold tracking-[-0.045em]">Mediterra</span>
+          <MediterraLogo />
         </a>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
@@ -48,7 +49,7 @@ export function MediterraHeader() {
                 "bluecrest-focus rounded-full px-3.5 py-2 text-[13px] font-medium tracking-[-0.015em] transition-colors duration-300",
                 isScrolled
                   ? "text-carbon/75 hover:bg-black/[0.055] hover:text-carbon"
-                  : "text-white/90 [text-shadow:0_1px_8px_rgba(0,31,73,0.35)] hover:bg-white/12 hover:text-white",
+                  : "text-white/90 [text-shadow:0_1px_8px_rgba(0,31,73,0.35)] hover:bg-white/[0.12] hover:text-white",
               )}
             >
               {item}
@@ -63,10 +64,10 @@ export function MediterraHeader() {
               "bluecrest-focus inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold tracking-[-0.015em] transition-all duration-300",
               isScrolled
                 ? "bg-carbon text-white shadow-[0_5px_15px_rgba(0,0,0,0.12)] hover:bg-black"
-                : "border border-white/35 bg-white/14 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.24)] backdrop-blur-md hover:bg-white/22",
+                : "border border-white/35 bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.24)] backdrop-blur-md hover:bg-white/[0.22]",
             )}
           >
-            Plan your stay
+            Explore Mediterra
             <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
           </a>
         </div>
