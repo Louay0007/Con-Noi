@@ -1,4 +1,4 @@
-import { BluecrestBadge, BluecrestButton, ProductMockup, TopNavigation } from "@/components/bluecrest";
+import { BluecrestBadge, BluecrestButton, ProductMockup } from "@/components/bluecrest";
 
 const Index = () => {
   const revealPreview = () => {
@@ -16,9 +16,7 @@ const Index = () => {
           <div className="absolute bottom-10 left-[10%] h-40 w-[80%] rounded-[50%] bg-[#74b8ff]/20 blur-3xl" />
         </div>
 
-        <TopNavigation />
-
-        <div className="bluecrest-container relative z-10 flex flex-col items-center pt-40 text-center sm:pt-44">
+        <div className="bluecrest-container relative z-10 flex flex-col items-center pt-24 text-center sm:pt-28">
           <BluecrestBadge className="liquid-glass-dark border-white/20 text-white" tone="neutral">
             Designed for spatial clarity
           </BluecrestBadge>
