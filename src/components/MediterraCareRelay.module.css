@@ -64,15 +64,16 @@
 
 .storyArea {
   position: relative;
-  min-height: 196px;
+  min-height: 214px;
   margin-top: 38px;
-  padding-left: 48px;
+  overflow: hidden;
 }
 
 .rail {
-  position: absolute;
-  inset: 2px auto 2px 5px;
-  width: 20px;
+  position: relative;
+  width: calc(100% - 8px);
+  height: 28px;
+  margin: 0 4px 22px;
 }
 
 .railBase,
@@ -80,28 +81,29 @@
   position: absolute;
   left: 5px;
   top: 5px;
-  width: 1px;
-  height: calc(100% - 10px);
+  width: calc(100% - 10px);
+  height: 1px;
   background: #e4e4e7;
-  transform-origin: top;
+  transform-origin: left;
 }
 
 .railActive {
   background: #3c83f6;
-  transform: scaleY(0);
+  transform: scaleX(0);
 }
 
 .marker {
   position: absolute;
-  left: 0;
+  top: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 9px;
+  gap: 6px;
   color: #777a88;
   font-size: 10px;
   font-weight: 650;
   letter-spacing: .08em;
-  transform: translateY(-50%);
+  transform: translateX(-50%);
   transition: color .25s ease;
 }
 
@@ -113,32 +115,32 @@
   border: 1px solid #b7bac3;
   border-radius: 999px;
   background: #fff;
-  transition: width .25s ease, height .25s ease, background .25s ease, border-color .25s ease, margin-left .25s ease;
+  transition: width .25s ease, height .25s ease, background .25s ease, border-color .25s ease, margin-top .25s ease;
 }
 
 .markerCurrent { color: #022c70; }
 .markerCurrent::before {
   width: 12px;
   height: 12px;
-  margin-left: -2px;
+  margin-top: -2px;
   border-color: #3c83f6;
   background: #3c83f6;
 }
 
-.chapterStack { position: relative; min-height: 176px; }
+.chapterStack { position: relative; min-height: 164px; overflow: hidden; }
 .chapter {
   position: absolute;
   inset: 0;
   opacity: .4;
   color: #777a88;
-  transform: translateY(18px);
+  transform: translateX(20px);
   pointer-events: none;
 }
 
 .chapter:first-child {
   opacity: 1;
   color: #18181b;
-  transform: translateY(0);
+  transform: translateX(0);
 }
 
 .chapterNumber {
@@ -243,9 +245,18 @@
   .heading { font-size: clamp(38px, 11vw, 48px); }
   .intro { font-size: 16px; }
   .storyArea, .desktopVisual { display: none; }
-  .mobileStories { display: grid; gap: 64px; margin-top: 64px; }
-  .mobileChapter { display: grid; gap: 22px; }
-  .mobileCopy { padding-left: 18px; border-left: 1px solid #e4e4e7; }
+  .mobileStories {
+    display: flex;
+    gap: 20px;
+    margin-top: 64px;
+    padding-bottom: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: #3c83f6 #e4e4e7;
+  }
+  .mobileChapter { display: grid; flex: 0 0 88%; gap: 22px; scroll-snap-align: start; }
+  .mobileCopy { min-height: 170px; padding-top: 16px; border-top: 1px solid #e4e4e7; }
   .mobileCopy h3 { margin-top: 9px; font-size: 25px; letter-spacing: -.03em; }
   .mobileCopy p { margin-top: 10px; color: #5e616e; font-size: 16px; line-height: 1.5; }
   .mobileVisual { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; background: radial-gradient(circle, #f3f8ff, #fff 72%); }

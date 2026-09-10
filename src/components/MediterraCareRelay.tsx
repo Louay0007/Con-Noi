@@ -115,9 +115,9 @@ export function MediterraCareRelay() {
     };
     const showChapter = (index: number, position: number) => {
       chapterEls.forEach((chapter, chapterIndex) => {
-        if (chapterIndex !== index) gsap.to(chapter, { opacity: .4, y: chapterIndex < index ? -18 : 18, color: "#777a88", duration: .22, overwrite: true });
+        if (chapterIndex !== index) gsap.to(chapter, { opacity: .4, x: chapterIndex < index ? -20 : 20, color: "#777a88", duration: .22, overwrite: true });
       });
-      timeline.to(chapterEls[index], { opacity: 1, y: 0, color: "#18181b", duration: .35 }, position);
+      timeline.to(chapterEls[index], { opacity: 1, x: 0, color: "#18181b", duration: .35 }, position);
       timeline.call(() => activate(index), [], position);
     };
 
@@ -140,7 +140,7 @@ export function MediterraCareRelay() {
     timeline
       .to(documents, { opacity: 1, y: 0, scale: 1, duration: .7 }, 1)
       .to(route, { strokeDashoffset: pathLength * .72, duration: .7, ease: "none" }, 1)
-      .to(rail, { scaleY: .25, duration: .7 }, 1);
+      .to(rail, { scaleX: .25, duration: .7 }, 1);
     showChapter(1, 1);
     timeline
       .to(route, { strokeDashoffset: pathLength * .4, duration: .8, ease: "none" }, 2)
@@ -149,21 +149,21 @@ export function MediterraCareRelay() {
       .to(specialist, { opacity: 1, scale: 1, duration: .65 }, 2)
       .to(halo, { opacity: 1, scale: 1, duration: .55 }, 2.1)
       .to(landscape, { yPercent: -8, duration: 1, ease: "none" }, 2)
-      .to(rail, { scaleY: .5, duration: .7 }, 2);
+      .to(rail, { scaleX: .5, duration: .7 }, 2);
     showChapter(2, 2);
     timeline
       .to(route, { strokeDashoffset: pathLength * .16, duration: .8, ease: "none" }, 3)
       .to(dot, { ...pointOnPath(.84), duration: .8, ease: "none" }, 3)
       .to(documents, { scale: 1.025, duration: .18, yoyo: true, repeat: 1 }, 3.2)
       .to(confirmation, { opacity: 1, scale: 1, duration: .4 }, 3.35)
-      .to(rail, { scaleY: .75, duration: .7 }, 3);
+      .to(rail, { scaleX: .75, duration: .7 }, 3);
     showChapter(3, 3);
     timeline
       .to(outcome, { opacity: 1, scale: 1, duration: .7 }, 4)
       .to(route, { strokeDashoffset: 0, duration: .7, ease: "none" }, 4)
       .to(dot, { ...pointOnPath(1), duration: .7, ease: "none" }, 4)
       .to(stage, { filter: "contrast(1.03) saturate(1.03)", duration: .6 }, 4)
-      .to(rail, { scaleY: 1, duration: .7 }, 4)
+      .to(rail, { scaleX: 1, duration: .7 }, 4)
       .to(cta, { opacity: 1, y: 0, duration: .5 }, 4.25);
     showChapter(4, 4);
 
@@ -195,7 +195,7 @@ export function MediterraCareRelay() {
                   <span className={styles.railBase} />
                   <span data-rail-active className={styles.railActive} />
                   {chapters.map((_, index) => (
-                    <span key={index} className={`${styles.marker} ${index === activeChapter ? styles.markerCurrent : ""}`} style={{ top: `${(index / 4) * 100}%` }} aria-hidden="true">0{index + 1}</span>
+                    <span key={index} className={`${styles.marker} ${index === activeChapter ? styles.markerCurrent : ""}`} style={{ left: `${(index / 4) * 100}%` }} aria-hidden="true">0{index + 1}</span>
                   ))}
                 </div>
                 <div className={styles.chapterStack}>
