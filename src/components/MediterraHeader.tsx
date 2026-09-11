@@ -37,7 +37,7 @@ export function MediterraHeader() {
             isScrolled ? "text-carbon" : "text-white [text-shadow:0_1px_10px_rgba(0,31,73,0.34)]",
           )}
         >
-          <MediterraLogo />
+          <MediterraLogo variant={isScrolled ? "dark" : "light"} />
         </a>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
