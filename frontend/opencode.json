@@ -1,0 +1,37 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "aipilot": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "aipilot",
+      "options": {
+        "baseURL": "https://aipilot-weld.vercel.app/v1",
+        "apiKey": "ap_live_fbmOL2flEyvn4oOa5_m_bH_uPgfOieby"
+      },
+      "models": {
+        "opus-5.5": {
+          "name": "opus-5.5",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          }
+        },
+        "sonnet-5.5": {
+          "name": "sonnet-5.5",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          }
+        },
+        "haiku-5.5": {
+          "name": "haiku-5.5",
+          "limit": {
+            "context": 1048576,
+            "output": 65536
+          }
+        }
+      }
+    }
+  },
+  "model": "aipilot/opus-5.5"
+}

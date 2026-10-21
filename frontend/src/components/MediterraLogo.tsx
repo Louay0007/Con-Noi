@@ -7,21 +7,18 @@ type MediterraLogoProps = {
 };
 
 export function MediterraLogo({ className, compact = false, variant = "light" }: MediterraLogoProps) {
-  const logoSrc = variant === "dark"
-    ? "/images/brand/mediterra-living-bridge-dark.png"
-    : "/images/brand/mediterra-living-bridge-light.png";
-
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <img
-        src={logoSrc}
-        width={2048}
-        height={2048}
-        alt=""
-        aria-hidden="true"
-        className="h-8 w-8 shrink-0 object-contain"
-      />
-      {!compact && <span className="text-[18px] font-semibold tracking-[-0.045em]">Mediterra</span>}
+    <span className={cn("inline-flex items-center gap-3", variant === "dark" && "text-white", className)}>
+      {!compact && (
+        <span className="text-[26px] font-semibold tracking-normal sm:text-[30px]">
+          Con noi
+        </span>
+      )}
+      {compact && (
+        <span className="text-lg font-semibold tracking-normal">
+          Con noi
+        </span>
+      )}
     </span>
   );
 }

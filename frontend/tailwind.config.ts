@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -49,8 +50,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["var(--font-sf-pro-display)"],
-        display: ["var(--font-sf-pro-display)"],
+        sans: ["var(--font-body)"],
+        display: ["var(--font-heading)"],
         mono: ["var(--font-ui-monospace)"],
       },
       maxWidth: { page: "var(--page-max-width)" },
@@ -71,5 +72,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindAnimate],
 } satisfies Config;

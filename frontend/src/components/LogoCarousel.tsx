@@ -1,73 +1,64 @@
-import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap";
+import { useState } from "react";
+import { Pause, Play } from "lucide-react";
+import "./LogoCarousel.css";
 
-const partners = [
-  { name: "Siemens", logo: "https://cdn.simpleicons.org/siemens/73777C" },
-  { name: "Roche", logo: "https://cdn.simpleicons.org/roche/73777C" },
-  { name: "Pfizer", logo: "https://cdn.simpleicons.org/pfizer/73777C" },
-  { name: "Sanofi", logo: "https://cdn.simpleicons.org/sanofi/73777C" },
-  { name: "Novartis", logo: "https://cdn.simpleicons.org/novartis/73777C" },
-  { name: "Bayer", logo: "https://cdn.simpleicons.org/bayer/73777C" },
-  { name: "Abbott", logo: "https://cdn.simpleicons.org/abbott/73777C" },
-  { name: "AstraZeneca", logo: "https://cdn.simpleicons.org/astrazeneca/73777C" },
+const sequences = [
+  [
+    "Edilizia Rossi",
+    "Meccanica Veneta",
+    "Gruppo Ferretti",
+    "Cantieri Navali Napoli",
+    "Elettrica Lombardia",
+    "Salerno Costruzioni",
+    "Idraulica Toscana",
+  ],
+  [
+    "Fonderie Bresciane",
+    "Saldatura Piemonte",
+    "Trasporti Emiliani",
+    "Impianti Milano",
+    "Carpenteria Siciliana",
+    "Manutenzioni Roma",
+    "Ferramenta Bergamo",
+  ],
 ];
 
 export function LogoCarousel() {
-  const marquee = useRef<HTMLDivElement>(null);
-  const track = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    if (!track.current) return;
-
-    const context = gsap.context(() => {
-      gsap.fromTo(
-        track.current,
-        { xPercent: 0 },
-        {
-          xPercent: -50,
-          duration: 24,
-          ease: "none",
-          repeat: -1,
-        },
-      );
-    }, marquee);
-
-    return () => context.revert();
-  }, []);
+  const [paused, setPaused] = useState(false);
 
   return (
-    <section className="overflow-hidden bg-white py-12 sm:py-14" aria-labelledby="partners-heading">
-      <div className="bluecrest-container">
-        <p id="partners-heading" className="text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-[#8b8d91]">
-          Trusted healthcare ecosystem
-        </p>
-      </div>
+    <section className="brand-showcase" aria-labelledby="partners-heading">
+      <h2 id="partners-heading">Aziende che assumono con noi</h2>
 
-      <div
-        ref={marquee}
-        className="logo-marquee relative mt-9 flex overflow-hidden"
-        role="region"
-        aria-label="Healthcare partners"
-      >
-        <div ref={track} className="flex w-max shrink-0 items-center will-change-transform">
-          {[0, 1].map((copy) => (
-            <div key={copy} className="flex shrink-0 items-center" aria-hidden={copy === 1}>
-              {partners.map((partner) => (
-                <div
-                  key={`${copy}-${partner.name}`}
-                  className="flex w-[180px] shrink-0 items-center justify-center px-8 sm:w-[220px] sm:px-10"
-                >
-                  <img
-                    src={partner.logo}
-                    alt={copy === 0 ? partner.name : ""}
-                    className="h-8 max-w-[130px] object-contain opacity-70 grayscale transition-opacity duration-300 hover:opacity-100 sm:h-9 sm:max-w-[150px]"
-                    loading="eager"
-                  />
-                </div>
+      <div className="brand-showcase__rows" data-paused={paused}>
+        <div className="brand-showcase__track">
+          {[...sequences, ...sequences].map((sequence, index) => (
+            <div
+              className="brand-showcase__sequence"
+              key={index}
+              aria-hidden={index >= sequences.length ? "true" : undefined}
+            >
+              {sequence.map((name) => (
+                <span className="brand-showcase__logo" key={`${index}-${name}`}>
+                  <span className="brand-showcase__name">{name}</span>
+                </span>
               ))}
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="brand-showcase__caption">
+        <button
+          type="button"
+          onClick={() => setPaused((current) => !current)}
+          className="brand-showcase__toggle bluecrest-focus"
+          aria-label={paused ? "Riprendi lo scorrimento dei nomi" : "Metti in pausa lo scorrimento dei nomi"}
+          aria-pressed={paused}
+        >
+          {paused ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}
+        </button>
+        <span>Oltre 2.000 aziende italiane cercano personale qualificato ogni giorno</span>
       </div>
     </section>
   );

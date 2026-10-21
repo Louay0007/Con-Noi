@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { MediterraLogo } from "./MediterraLogo";
+import { MediterraLogo } from "@/components/MediterraLogo";
 
-const navigation = ["Bridge", "Care", "About"];
+const navigation = [
+  { label: "Come funziona", href: "#how-it-works" },
+  { label: "Domande", href: "#faq" },
+];
 
 export function MediterraHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -28,23 +31,22 @@ export function MediterraHeader() {
           : "border-transparent bg-transparent shadow-none backdrop-blur-none",
       )}
     >
-      <div className="bluecrest-container grid h-[58px] grid-cols-[1fr_auto_1fr] items-center">
+      <div className="bluecrest-container grid min-h-[88px] grid-cols-[1fr_auto_1fr] items-center gap-4 py-2">
         <a
           href="#top"
-          aria-label="Mediterra home"
+          aria-label="Con noi home"
           className={cn(
-            "bluecrest-focus inline-flex h-9 w-[148px] items-center rounded-lg transition-colors duration-500 motion-reduce:duration-0",
-            isScrolled ? "text-carbon" : "text-white [text-shadow:0_1px_10px_rgba(0,31,73,0.34)]",
+            "bluecrest-focus inline-flex w-fit items-center rounded-lg bg-white text-carbon transition-colors duration-500 motion-reduce:duration-0",
           )}
         >
-          <MediterraLogo variant={isScrolled ? "dark" : "light"} />
+          <MediterraLogo />
         </a>
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
+        <nav className="hidden items-center gap-1 md:flex" aria-label="Navigazione principale">
           {navigation.map((item) => (
             <a
-              key={item}
-              href="#future-content"
+              key={item.label}
+              href={item.href}
               className={cn(
                 "bluecrest-focus rounded-full px-3.5 py-2 text-[13px] font-medium tracking-[-0.015em] transition-colors duration-300",
                 isScrolled
@@ -52,14 +54,14 @@ export function MediterraHeader() {
                   : "text-white/90 [text-shadow:0_1px_8px_rgba(0,31,73,0.35)] hover:bg-white/[0.12] hover:text-white",
               )}
             >
-              {item}
+              {item.label}
             </a>
           ))}
         </nav>
 
         <div className="hidden justify-self-end md:block">
           <a
-            href="#future-content"
+            href="#top"
             className={cn(
               "bluecrest-focus inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold tracking-[-0.015em] transition-all duration-300",
               isScrolled
@@ -67,7 +69,7 @@ export function MediterraHeader() {
                 : "border border-white/35 bg-white/[0.14] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.24)] backdrop-blur-md hover:bg-white/[0.22]",
             )}
           >
-            Explore Mediterra
+            Inizia ora
             <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
           </a>
         </div>

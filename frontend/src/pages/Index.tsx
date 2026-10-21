@@ -1,28 +1,24 @@
 import { LogoCarousel } from "@/components/LogoCarousel";
-import { MediterraCareRelay } from "@/components/MediterraCareRelay";
-import { MediterraHeader } from "@/components/MediterraHeader";
-import { MediterraHeroCopy } from "@/components/MediterraHeroCopy";
-import { WorkflowSection } from "@/components/WorkflowSection";
+import { Seo } from "@/components/Seo";
+import { MediterraFaq } from "@/components/MediterraFaq";
+import { MediterraFooter } from "@/components/MediterraFooter";
+import { MediterraMinimalistHero } from "@/components/MediterraMinimalistHero";
+import TestimonialMarquee from "@/components/ui/marquee-01";
+import SmoothScroll from "@/components/ui/smooth-scroll";
 
 const Index = () => {
   return (
     <main id="top" className="min-h-screen bg-white">
-      <MediterraHeader />
-      <section
-        aria-label="Mediterranean coastal landscape"
-        className="min-h-screen w-full bg-white bg-cover bg-top bg-no-repeat md:bg-center"
-        style={{ backgroundImage: "url('/mediterra-hero.png')" }}
-      >
-        <MediterraHeroCopy />
-      </section>
-      <LogoCarousel />
-      <MediterraCareRelay />
-      <WorkflowSection />
-      <section
-        id="future-content"
-        aria-label="Reserved for future content"
-        className="min-h-screen bg-white"
+      <Seo
+        title="Con noi — Trova lavoro nel settore edile e industriale"
+        description="Con noi è la piattaforma che connette lavoratori qualificati con le migliori aziende italiane. Crea il tuo profilo, carica il CV e candidati direttamente alle posizioni disponibili nei settori edile, meccanico, elettrico e industriale."
       />
+      <MediterraMinimalistHero />
+      <LogoCarousel />
+      <SmoothScroll />
+      <TestimonialMarquee />
+      <MediterraFaq />
+      <MediterraFooter />
     </main>
   );
 };
