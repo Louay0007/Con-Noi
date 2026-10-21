@@ -1,0 +1,35 @@
+{
+  "auth": {
+    "invalidCredentials": "Email o password non validi",
+    "accountLocked": "Account temporaneamente bloccato. Riprova più tardi.",
+    "accountDeactivated": "L'account è disattivato",
+    "tokenExpired": "Sessione scaduta. Effettua nuovamente il login.",
+    "passwordChanged": "Password modificata con successo"
+  },
+  "users": {
+    "notFound": "Utente non trovato",
+    "emailTaken": "Email già registrata",
+    "profileUpdated": "Profilo aggiornato con successo",
+    "accountDeleted": "Account eliminato con successo"
+  },
+  "posts": {
+    "notFound": "Annuncio non trovato",
+    "notPublished": "L'annuncio non accetta candidature",
+    "deadlinePassed": "Il termine per la candidatura è scaduto"
+  },
+  "applications": {
+    "alreadyApplied": "Hai già inviato una candidatura per questo annuncio",
+    "withdrawn": "Candidatura ritirata con successo",
+    "cannotWithdraw": "Impossibile ritirare la candidatura nello stato attuale"
+  },
+  "files": {
+    "uploadFailed": "Caricamento file fallito",
+    "invalidType": "Tipo di file non consentito",
+    "sizeExceeded": "La dimensione del file supera il limite",
+    "accessDenied": "Accesso negato"
+  },
+  "messages": {
+    "threadClosed": "La conversazione è chiusa",
+    "notParticipant": "Non sei un partecipante di questa conversazione"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "auth": {
+    "invalidCredentials": "Invalid email or password",
+    "accountLocked": "Account is temporarily locked. Try again later.",
+    "accountDeactivated": "Account is deactivated",
+    "tokenExpired": "Session expired. Please login again.",
+    "passwordChanged": "Password changed successfully"
+  },
+  "users": {
+    "notFound": "User not found",
+    "emailTaken": "Email already registered",
+    "profileUpdated": "Profile updated successfully",
+    "accountDeleted": "Account deleted successfully"
+  },
+  "posts": {
+    "notFound": "Post not found",
+    "notPublished": "Post is not accepting applications",
+    "deadlinePassed": "Application deadline has passed"
+  },
+  "applications": {
+    "alreadyApplied": "You have already applied to this post",
+    "withdrawn": "Application withdrawn successfully",
+    "cannotWithdraw": "Cannot withdraw application in current status"
+  },
+  "files": {
+    "uploadFailed": "File upload failed",
+    "invalidType": "File type not allowed",
+    "sizeExceeded": "File size exceeds limit",
+    "accessDenied": "Access denied"
+  },
+  "messages": {
+    "threadClosed": "Conversation is closed",
+    "notParticipant": "Not a participant in this conversation"
+  }
+}
