@@ -1,0 +1,22 @@
+{
+  "name": "Con noi — Trova lavoro nel settore edile e industriale",
+  "short_name": "Con noi",
+  "description": "Connettiamo lavoratori qualificati con aziende italiane nei settori edile, meccanico, elettrico e industriale.",
+  "lang": "it",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#07172f",
+  "icons": [
+    {
+      "src": "/images/brand/elseview-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/brand/elseview-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

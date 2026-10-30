@@ -1,0 +1,31 @@
+:8080 {
+	encode zstd gzip
+
+	# API and docs are proxied to the NestJS container.
+	# Caddy v2 reads environment variables as {$VAR} — {env.VAR} is v1 syntax
+	# and silently resolved to an empty upstream, causing 502s.
+	handle /api/* {
+		reverse_proxy {$API_UPSTREAM}
+	}
+
+	# Hashed build assets are immutable.
+	handle /assets/* {
+		header Cache-Control "public, max-age=31536000, immutable"
+		root * /srv
+		file_server
+	}
+
+	# SPA history fallback.
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}

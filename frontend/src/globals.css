@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - var(--gap))); }
+}
+
+@layer base {
+  :root {
+    /* === Blueprint: Industrial Trust Palette === */
+    --brand-primary: #0F4C81;
+    --brand-accent: #E67E22;
+    --surface-bg: #F8F9FA;
+    --surface-card: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-muted: #6B7280;
+    --success: #16A34A;
+    --warning: #D97706;
+    --danger: #DC2626;
+    --border-color: #E5E7EB;
+
+    /* Legacy aliases (landing page still uses these) */
+    --color-signal-blue: var(--brand-primary);
+    --color-deep-dusk: #001b45;
+    --color-azure-crest: #0066cc;
+    --color-hover-glow: #9bd0ff;
+    --color-ink-black: #000000;
+    --color-carbon: var(--text-primary);
+    --color-slate: #34343a;
+    --color-steel: var(--text-muted);
+    --color-fog: #8e8e93;
+    --color-mist: #aeaeb2;
+    --color-vapor: #f2f2f7;
+    --color-frost: var(--surface-bg);
+    --color-chalk: #ffffff;
+    --color-bone: rgba(60, 60, 67, 0.14);
+    --color-ash: rgba(60, 60, 67, 0.22);
+    --color-neon: var(--success);
+    --color-cyan-veil: #64d2ff;
+
+    /* Typography — Blueprint spec */
+    --font-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+    /* shadcn/ui HSL mappings → blueprint colors */
+    --background: 210 17% 98%;       /* #F8F9FA surface-bg */
+    --foreground: 0 0% 10%;          /* #1A1A1A text-primary */
+    --card: 0 0% 100%;               /* #FFFFFF surface-card */
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 207 78% 28%;          /* #0F4C81 brand-primary */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;        /* light gray */
+    --secondary-foreground: 0 0% 10%;
+    --muted: 220 9% 46%;             /* #6B7280 text-muted */
+    --muted-foreground: 220 9% 46%;
+    --accent: 28 83% 52%;            /* #E67E22 brand-accent */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;        /* #DC2626 danger */
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;           /* #E5E7EB border */
+    --input: 220 13% 91%;
+    --ring: 207 78% 28%;             /* brand-primary focus ring */
+
+    /* Sidebar */
+    --sidebar-background: 210 17% 98%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 207 78% 28%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 207 78% 28%;
+
+    /* Radius — Blueprint: 8px cards, 6px inputs/buttons, 999px pills */
+    --radius: 0.5rem;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+    --radius-full: 9999px;
+
+    /* Shadows — Blueprint spec */
+    --shadow-subtle: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-elevated: 0 4px 12px rgba(0,0,0,0.12);
+  }
+
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    min-width: 320px;
+    font-family: var(--font-body);
+    letter-spacing: -0.011em;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-synthesis: none;
+  }
+  button, input, textarea, select { font: inherit; }
+  ::selection { background: rgba(15, 76, 129, 0.18); }
+}
+
+@layer components {
+  .bluecrest-container {
+    width: min(calc(100% - 40px), 1280px);
+    margin-inline: auto;
+  }
+  .bluecrest-focus {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2;
+  }
+
+  /* Auth card layout */
+  .auth-card {
+    @apply w-full max-w-[480px] rounded-lg bg-white p-6 sm:p-8;
+    box-shadow: var(--shadow-elevated);
+  }
+  .auth-input {
+    @apply flex h-11 w-full rounded-md border border-[#E5E7EB] bg-white px-3 text-sm text-[#1A1A1A] placeholder:text-[#6B7280] transition-colors duration-150 ease-in-out;
+    @apply focus:border-[#0F4C81] focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .auth-label {
+    @apply mb-1.5 block text-sm font-medium text-[#1A1A1A];
+  }
+  .auth-error {
+    @apply mt-1 text-xs text-[#DC2626];
+  }
+  .auth-btn-primary {
+    @apply inline-flex h-11 w-full items-center justify-center rounded-md bg-[#0F4C81] px-4 text-sm font-semibold text-white transition-colors duration-150 ease-in-out;
+    @apply hover:bg-[#0a3d6b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .auth-link {
+    @apply text-sm font-medium text-[#0F4C81] transition-colors hover:text-[#0a3d6b] hover:underline;
+  }
+
+  /* Speciality chip */
+  .speciality-chip {
+    @apply inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-[#1A1A1A] transition-all duration-150 ease-in-out;
+    @apply hover:border-[#0F4C81] hover:bg-[#0F4C81]/5;
+    @apply data-[selected=true]:border-[#0F4C81] data-[selected=true]:bg-[#0F4C81] data-[selected=true]:text-white;
+  }
+
+  /* Password strength meter */
+  .strength-bar {
+    @apply h-1.5 flex-1 rounded-full bg-[#E5E7EB] transition-colors duration-300;
+  }
+  .strength-bar[data-active="true"][data-level="weak"] { @apply bg-[#DC2626]; }
+  .strength-bar[data-active="true"][data-level="fair"] { @apply bg-[#D97706]; }
+  .strength-bar[data-active="true"][data-level="good"] { @apply bg-[#0F4C81]; }
+  .strength-bar[data-active="true"][data-level="strong"] { @apply bg-[#16A34A]; }
+}
+
+@keyframes card-brand-in {
+  from { opacity: 0; transform: translateY(4px) scale(.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-brand-in {
+  animation: card-brand-in .28s cubic-bezier(.22,1,.36,1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-brand-in { animation: none; }
+}
