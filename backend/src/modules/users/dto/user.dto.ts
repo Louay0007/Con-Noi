@@ -71,6 +71,11 @@ export class UpdateProfileDto {
   @IsOptional()
   @IsString()
   availability?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  onboardingCompleted?: boolean;
 }
 
 export class UpdateSpecialitiesDto {

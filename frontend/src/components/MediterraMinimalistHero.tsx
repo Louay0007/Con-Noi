@@ -5,7 +5,7 @@ import { MediterraLogo } from "@/components/MediterraLogo";
 const footerLinks = [
   { label: "Scopri le opportunità di lavoro", icon: ClipboardList, href: "#testimonial-heading" },
   { label: "Domande su Con noi", icon: MessageCircleQuestion, href: "#faq" },
-  { label: "Come funziona la piattaforma", icon: Compass, href: "#future-content" },
+  { label: "Come funziona la piattaforma", icon: Compass, href: "#how-it-works" },
 ];
 
 export function MediterraMinimalistHero() {
@@ -14,8 +14,8 @@ export function MediterraMinimalistHero() {
       logo={<MediterraLogo className="text-carbon" />}
       mainText="Il tuo prossimo lavoro inizia qui. Con noi trovi le migliori opportunità nel settore edile, meccanico e industriale. Crea il tuo profilo, carica il CV e candidati direttamente alle posizioni disponibili."
       readMoreLabel="Inizia ora gratuitamente"
-      readMoreLink="#top"
-      imageSrc="/images/hero/elseview-research-session.png"
+      readMoreLink="/auth/signup"
+      imageBasePath="/images/hero/hero"
       imageAlt="Illustrazione di un lavoratore che consulta le opportunità di lavoro sulla piattaforma Con noi."
       overlayText={{
         part1: "trova lavoro.",

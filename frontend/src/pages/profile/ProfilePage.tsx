@@ -6,6 +6,7 @@ import {
   Camera, Edit3, Save, Lock, Bell, Globe, Car, Eye,
 } from "lucide-react";
 import { api, fileDownloadUrl, getErrorMessage, type SafeUser, type Speciality, type WorkHistoryEntry } from "@/lib/api";
+import { Seo } from "@/components/Seo";
 
 const TABS = [
   { key: "overview", label: "Panoramica", icon: User },
@@ -100,14 +101,14 @@ function OverviewTab({
           <span className="font-bold text-[#0F4C81]">{completeness}%</span>
         </div>
         <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-[#E5E7EB]">
-          <div className="h-full rounded-full bg-[#0F4C81] transition-all duration-500" style={{ width: `${completeness}%` }} />
+          <div className="h-full rounded-full bg-[#0F4C81] transition-[width] duration-500 ease-out" style={{ width: `${completeness}%` }} />
         </div>
       </div>
 
       {/* Avatar */}
       <div className="flex items-center gap-4">
         <div className="relative">
-          <div className="flex size-20 items-center justify-center overflow-hidden rounded-full bg-[#0F4C81]/10 text-2xl font-bold text-[#0F4C81]">
+          <div className="flex size-20 items-center justify-center overflow-hidden rounded-full bg-[#E8F0F9] text-2xl font-bold text-[#0F4C81]">
             {user.avatarUrl ? (
               <img src={user.avatarUrl} alt="" className="size-20 object-cover" />
             ) : (
@@ -117,35 +118,40 @@ function OverviewTab({
           <button
             onClick={() => fileRef.current?.click()}
             disabled={avatarUploading}
-            className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full bg-[#0F4C81] text-white shadow-md hover:bg-[#0a3d6b] disabled:opacity-50"
+            className="absolute -bottom-1 -right-1 flex size-11 items-center justify-center rounded-full bg-[#0F4C81] text-white shadow-md transition-colors hover:bg-[#0a3d6b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2 disabled:opacity-50"
+            aria-label={avatarUploading ? "Caricamento foto in corso" : "Cambia foto profilo"}
           >
-            {avatarUploading ? <Loader2 className="size-3 animate-spin" /> : <Camera className="size-3" />}
+            {avatarUploading ? (
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+            ) : (
+              <Camera className="size-4" aria-hidden="true" />
+            )}
           </button>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} />
         </div>
         <div>
           <p className="text-lg font-bold text-[#1A1A1A]">{user.fullName}</p>
-          <p className="text-sm text-[#6B7280]">{user.email}</p>
+          <p className="text-sm text-[#4B5563]">{user.email}</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="auth-label">Nome completo</label>
-            <input className="auth-input" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} />
+            <label htmlFor="profile-nome-completo" className="auth-label">Nome completo</label>
+            <input id="profile-nome-completo" className="auth-input" value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} />
           </div>
           <div>
-            <label className="auth-label">Città</label>
-            <input className="auth-input" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+            <label htmlFor="profile-citta" className="auth-label">Città</label>
+            <input id="profile-citta" className="auth-input" value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} />
           </div>
           <div>
-            <label className="auth-label">Provincia</label>
-            <input className="auth-input" value={form.province} onChange={(e) => setForm({ ...form, province: e.target.value })} />
+            <label htmlFor="profile-provincia" className="auth-label">Provincia</label>
+            <input id="profile-provincia" className="auth-input" value={form.province} onChange={(e) => setForm({ ...form, province: e.target.value })} />
           </div>
           <div>
-            <label className="auth-label">Disponibilità</label>
-            <select className="auth-input" value={form.availability} onChange={(e) => setForm({ ...form, availability: e.target.value })}>
+            <label htmlFor="profile-disponibilita" className="auth-label">Disponibilità</label>
+            <select id="profile-disponibilita" className="auth-input" value={form.availability} onChange={(e) => setForm({ ...form, availability: e.target.value })}>
               <option value="immediate">Immediata</option>
               <option value="two_weeks">Due settimane</option>
               <option value="one_month">Un mese</option>
@@ -155,40 +161,46 @@ function OverviewTab({
         </div>
 
         <div>
-          <label className="auth-label">Bio</label>
-          <textarea className="auth-input min-h-[80px] resize-none" maxLength={2000} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Raccontaci brevemente di te…" />
+          <label htmlFor="profile-bio" className="auth-label">Bio</label>
+          <textarea id="profile-bio" className="auth-input min-h-[80px] resize-none" maxLength={2000} value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Raccontaci brevemente di te…" />
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="auth-label">Lingue (separate da virgola)</label>
-            <input className="auth-input" value={form.languages} onChange={(e) => setForm({ ...form, languages: e.target.value })} placeholder="Italiano, Inglese" />
+            <label htmlFor="profile-lingue-separate-da-virgola" className="auth-label">Lingue (separate da virgola)</label>
+            <input id="profile-lingue-separate-da-virgola" className="auth-input" value={form.languages} onChange={(e) => setForm({ ...form, languages: e.target.value })} placeholder="Italiano, Inglese" />
           </div>
           <div>
-            <label className="auth-label">Certificazioni (separate da virgola)</label>
-            <input className="auth-input" value={form.certifications} onChange={(e) => setForm({ ...form, certifications: e.target.value })} placeholder="Sicurezza sul lavoro, Patentino muletto" />
+            <label htmlFor="profile-certificazioni-separate-da-virgola" className="auth-label">Certificazioni (separate da virgola)</label>
+            <input id="profile-certificazioni-separate-da-virgola" className="auth-input" value={form.certifications} onChange={(e) => setForm({ ...form, certifications: e.target.value })} placeholder="Sicurezza sul lavoro, Patentino muletto" />
           </div>
         </div>
 
         <label className="flex cursor-pointer items-center gap-3 rounded-md border border-[#E5E7EB] p-3 text-sm">
-          <input type="checkbox" checked={form.hasDriversLicence} onChange={(e) => setForm({ ...form, hasDriversLicence: e.target.checked })} className="size-4 rounded border-[#E5E7EB] accent-[#0F4C81]" />
-          <Car className="size-4 text-[#6B7280]" />
+          <input id="profile-patente" type="checkbox" checked={form.hasDriversLicence} onChange={(e) => setForm({ ...form, hasDriversLicence: e.target.checked })} className="size-5 shrink-0 rounded border-[#E5E7EB] accent-[#0F4C81]" />
+          <Car className="size-4 text-[#4B5563]" aria-hidden="true" />
           <span className="text-[#1A1A1A]">Patente di guida</span>
         </label>
 
         {/* Specialities */}
         <div>
           <div className="flex items-center justify-between">
-            <label className="auth-label mb-0">Specialità</label>
-            <button type="button" onClick={() => setEditingSpecs(!editingSpecs)} className="inline-flex items-center gap-1 text-xs font-medium text-[#0F4C81] hover:underline">
-              <Edit3 className="size-3" /> {editingSpecs ? "Chiudi" : "Modifica"}
+            <span id="profile-specialita" className="auth-label mb-0">Specialità</span>
+            <button
+              type="button"
+              onClick={() => setEditingSpecs(!editingSpecs)}
+              aria-expanded={editingSpecs}
+              aria-controls="profile-specialita-list"
+              className="inline-flex min-h-11 items-center gap-1 rounded-md px-1 text-xs font-medium text-[#0F4C81] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2"
+            >
+              <Edit3 className="size-3" aria-hidden="true" /> {editingSpecs ? "Chiudi" : "Modifica"}
             </button>
           </div>
           {editingSpecs ? (
-            <div className="mt-2 max-h-48 space-y-3 overflow-y-auto rounded-md border border-[#E5E7EB] p-3">
+            <div id="profile-specialita-list" className="mt-2 max-h-48 space-y-3 overflow-y-auto rounded-md border border-[#E5E7EB] p-3">
               {Object.entries(grouped).map(([category, specs]) => (
                 <div key={category}>
-                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">{category}</p>
+                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">{category}</p>
                   <div className="flex flex-wrap gap-2">
                     {specs.map((s) => (
                       <button
@@ -211,9 +223,9 @@ function OverviewTab({
             <div className="mt-2 flex flex-wrap gap-1.5">
               {(user.specialityIds || []).map((id) => {
                 const spec = specialities.find((s) => s._id === id);
-                return <span key={id} className="rounded-full bg-[#0F4C81]/10 px-2.5 py-1 text-xs font-medium text-[#0F4C81]">{spec?.name || id}</span>;
+                return <span key={id} className="rounded-full bg-[#E8F0F9] px-2.5 py-1 text-xs font-medium text-[#0F4C81]">{spec?.name || id}</span>;
               })}
-              {(!user.specialityIds || user.specialityIds.length === 0) && <span className="text-xs text-[#6B7280]">Nessuna specialità selezionata</span>}
+              {(!user.specialityIds || user.specialityIds.length === 0) && <span className="text-xs text-[#4B5563]">Nessuna specialità selezionata</span>}
             </div>
           )}
         </div>
@@ -316,30 +328,30 @@ function HistoryTab({ specialities }: { specialities: Speciality[] }) {
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <p className="font-semibold text-[#1A1A1A]">{entry.positionTitle}</p>
-                    <p className="text-sm text-[#6B7280]">{entry.companyName}</p>
+                    <p className="text-sm text-[#4B5563]">{entry.companyName}</p>
                   </div>
                   <div className="flex gap-1">
-                    <button onClick={() => openEdit(entry)} className="rounded p-1 text-[#6B7280] hover:bg-[#E5E7EB] hover:text-[#0F4C81]"><Edit3 className="size-3.5" /></button>
-                    <button onClick={() => remove(entry._id)} className="rounded p-1 text-[#6B7280] hover:bg-[#DC2626]/10 hover:text-[#DC2626]"><Trash2 className="size-3.5" /></button>
+                    <button onClick={() => openEdit(entry)} className="rounded p-1 text-[#4B5563] hover:bg-[#E5E7EB] hover:text-[#0F4C81]"><Edit3 className="size-3.5" /></button>
+                    <button onClick={() => remove(entry._id)} className="rounded p-1 text-[#4B5563] hover:bg-[#FCE9E9] hover:text-[#B91C1C]"><Trash2 className="size-3.5" /></button>
                   </div>
                 </div>
-                <div className="mt-2 flex flex-wrap gap-3 text-xs text-[#6B7280]">
+                <div className="mt-2 flex flex-wrap gap-3 text-xs text-[#4B5563]">
                   <span className="flex items-center gap-1"><Calendar className="size-3" />{new Date(entry.startDate).toLocaleDateString("it-IT", { month: "short", year: "numeric" })} – {entry.isCurrent ? "Attuale" : entry.endDate ? new Date(entry.endDate).toLocaleDateString("it-IT", { month: "short", year: "numeric" }) : ""}</span>
                   {entry.location && <span className="flex items-center gap-1"><MapPin className="size-3" />{entry.location}</span>}
                 </div>
-                {entry.description && <p className="mt-2 text-sm leading-relaxed text-[#6B7280] line-clamp-2">{entry.description}</p>}
-                {entry.isCurrent && <span className="mt-2 inline-block rounded-full bg-[#16A34A]/10 px-2 py-0.5 text-xs font-medium text-[#16A34A]">Posizione attuale</span>}
+                {entry.description && <p className="mt-2 text-sm leading-relaxed text-[#4B5563] line-clamp-2">{entry.description}</p>}
+                {entry.isCurrent && <span className="mt-2 inline-block rounded-full bg-[#E8F6ED] px-2 py-0.5 text-xs font-medium text-[#15803D]">Posizione attuale</span>}
               </div>
             </div>
           ))}
         </div>
       ) : (
         <div className="rounded-lg border border-dashed border-[#E5E7EB] py-12 text-center">
-          <Briefcase className="mx-auto mb-3 size-10 text-[#6B7280]" />
-          <p className="text-sm text-[#6B7280]">Nessuna esperienza aggiunta</p>
+          <Briefcase className="mx-auto mb-3 size-10 text-[#4B5563]" />
+          <p className="text-sm text-[#4B5563]">Nessuna esperienza aggiunta</p>
         </div>
       )}
-      <button onClick={openAdd} className="flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-[#0F4C81] bg-[#0F4C81]/5 py-3 text-sm font-medium text-[#0F4C81] hover:bg-[#0F4C81]/10">
+      <button onClick={openAdd} className="flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-[#0F4C81] bg-[#0F4C81]/5 py-3 text-sm font-medium text-[#0F4C81] hover:bg-[#E8F0F9]">
         <Plus className="size-4" /> Aggiungi posizione
       </button>
 
@@ -350,22 +362,22 @@ function HistoryTab({ specialities }: { specialities: Speciality[] }) {
           <div className="relative w-full max-w-lg animate-in slide-in-from-bottom-4 rounded-t-xl bg-white p-6 shadow-xl sm:rounded-xl sm:slide-in-from-bottom-0">
             <div className="mb-5 flex items-center justify-between">
               <h3 className="text-lg font-bold text-[#1A1A1A]">{editingId ? "Modifica posizione" : "Nuova posizione"}</h3>
-              <button onClick={close} className="rounded-md p-1 text-[#6B7280] hover:bg-[#E5E7EB]"><X className="size-5" /></button>
+              <button onClick={close} className="rounded-md p-1 text-[#4B5563] hover:bg-[#E5E7EB]"><X className="size-5" /></button>
             </div>
             <div className="space-y-4">
-              <div><label className="auth-label">Titolo *</label><input className="auth-input" value={form.positionTitle} onChange={(e) => setForm({ ...form, positionTitle: e.target.value })} /></div>
-              <div><label className="auth-label">Azienda *</label><input className="auth-input" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} /></div>
+              <div><label htmlFor="profile-titolo" className="auth-label">Titolo *</label><input id="profile-titolo" className="auth-input" value={form.positionTitle} onChange={(e) => setForm({ ...form, positionTitle: e.target.value })} /></div>
+              <div><label htmlFor="profile-azienda" className="auth-label">Azienda *</label><input id="profile-azienda" className="auth-input" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} /></div>
               <div className="grid grid-cols-2 gap-4">
-                <div><label className="auth-label">Inizio *</label><input type="month" className="auth-input" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} /></div>
-                <div><label className="auth-label">Fine</label><input type="month" className="auth-input" disabled={form.isCurrent} value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} /></div>
+                <div><label htmlFor="profile-inizio" className="auth-label">Inizio *</label><input id="profile-inizio" type="month" className="auth-input" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} /></div>
+                <div><label htmlFor="profile-fine" className="auth-label">Fine</label><input id="profile-fine" type="month" className="auth-input" disabled={form.isCurrent} value={form.endDate} onChange={(e) => setForm({ ...form, endDate: e.target.value })} /></div>
               </div>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={form.isCurrent} onChange={(e) => setForm({ ...form, isCurrent: e.target.checked, endDate: "" })} className="size-4 rounded border-[#E5E7EB] accent-[#0F4C81]" />
+              <label htmlFor="history-current" className="flex min-h-11 cursor-pointer items-center gap-2 text-sm">
+                <input id="history-current" type="checkbox" checked={form.isCurrent} onChange={(e) => setForm({ ...form, isCurrent: e.target.checked, endDate: "" })} className="size-5 shrink-0 rounded border-[#E5E7EB] accent-[#0F4C81]" />
                 Posizione attuale
               </label>
-              <div><label className="auth-label">Sede</label><input className="auth-input" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="es. Milano" /></div>
-              <div><label className="auth-label">Descrizione</label><textarea className="auth-input min-h-[80px] resize-none" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Responsabilità e risultati…" maxLength={1000} /></div>
-              {formError && <div className="rounded-md bg-[#DC2626]/10 px-3 py-2 text-sm text-[#DC2626]" role="alert">{formError}</div>}
+              <div><label htmlFor="profile-sede" className="auth-label">Sede</label><input id="profile-sede" className="auth-input" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="es. Milano" /></div>
+              <div><label htmlFor="profile-descrizione" className="auth-label">Descrizione</label><textarea id="profile-descrizione" className="auth-input min-h-[80px] resize-none" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Responsabilità e risultati…" maxLength={1000} /></div>
+              {formError && <div className="rounded-md bg-[#FCE9E9] px-3 py-2 text-sm text-[#B91C1C]" role="alert">{formError}</div>}
               <button onClick={save} disabled={saving} className="auth-btn-primary">
                 {saving ? <Loader2 className="size-4 animate-spin" /> : "Salva posizione"}
               </button>
@@ -441,7 +453,7 @@ function DocumentsTab() {
             <button
               onClick={() => cat.ref.current?.click()}
               disabled={uploading === cat.key}
-              className="inline-flex items-center gap-1.5 rounded-md border border-[#0F4C81] bg-[#0F4C81]/5 px-3 py-1.5 text-xs font-medium text-[#0F4C81] hover:bg-[#0F4C81]/10 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-md border border-[#0F4C81] bg-[#0F4C81]/5 px-3 py-1.5 text-xs font-medium text-[#0F4C81] hover:bg-[#E8F0F9] disabled:opacity-50"
             >
               {uploading === cat.key ? <Loader2 className="size-3 animate-spin" /> : <Upload className="size-3" />}
               Carica
@@ -450,8 +462,8 @@ function DocumentsTab() {
           </div>
           {(grouped[cat.key] || []).length === 0 ? (
             <div className="rounded-lg border border-dashed border-[#E5E7EB] py-8 text-center">
-              <FileText className="mx-auto mb-2 size-8 text-[#6B7280]" />
-              <p className="text-xs text-[#6B7280]">Nessun file caricato</p>
+              <FileText className="mx-auto mb-2 size-8 text-[#4B5563]" />
+              <p className="text-xs text-[#4B5563]">Nessun file caricato</p>
             </div>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2">
@@ -462,23 +474,23 @@ function DocumentsTab() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-[#1A1A1A]">{file.originalName}</p>
-                    <div className="flex items-center gap-2 text-[10px] text-[#6B7280]">
+                    <div className="flex items-center gap-2 text-xs text-[#4B5563]">
                       <span>{(file.sizeBytes / 1024).toFixed(0)} KB</span>
                       <span>·</span>
                       <span>{new Date(file.createdAt).toLocaleDateString("it-IT")}</span>
                       {file.scanStatus && (
                         <>
                           <span>·</span>
-                          <span className={`font-medium ${file.scanStatus === "clean" ? "text-[#16A34A]" : "text-[#D97706]"}`}>{file.scanStatus}</span>
+                          <span className={`font-medium ${file.scanStatus === "clean" ? "text-[#15803D]" : "text-[#B45309]"}`}>{file.scanStatus}</span>
                         </>
                       )}
                     </div>
                   </div>
                   <div className="flex gap-1">
-                    <a href={fileDownloadUrl(file.id)} target="_blank" rel="noopener noreferrer" className="rounded p-1 text-[#6B7280] hover:bg-[#E5E7EB] hover:text-[#0F4C81]">
+                    <a href={fileDownloadUrl(file.id)} target="_blank" rel="noopener noreferrer" className="rounded p-1 text-[#4B5563] hover:bg-[#E5E7EB] hover:text-[#0F4C81]">
                       <Download className="size-3.5" />
                     </a>
-                    <button onClick={() => handleDelete(file.id)} disabled={deleting === file.id} className="rounded p-1 text-[#6B7280] hover:bg-[#DC2626]/10 hover:text-[#DC2626] disabled:opacity-50">
+                    <button onClick={() => handleDelete(file.id)} disabled={deleting === file.id} className="rounded p-1 text-[#4B5563] hover:bg-[#FCE9E9] hover:text-[#B91C1C] disabled:opacity-50">
                       {deleting === file.id ? <Loader2 className="size-3.5 animate-spin" /> : <Trash2 className="size-3.5" />}
                     </button>
                   </div>
@@ -555,11 +567,11 @@ function SettingsTab({ user }: { user: SafeUser }) {
       <section>
         <h3 className="mb-4 flex items-center gap-2 text-base font-bold text-[#1A1A1A]"><Lock className="size-4 text-[#0F4C81]" /> Cambia password</h3>
         <form onSubmit={handleChangePassword} className="max-w-md space-y-4">
-          <div><label className="auth-label">Password attuale</label><input type="password" className="auth-input" value={pwForm.currentPassword} onChange={(e) => setPwForm({ ...pwForm, currentPassword: e.target.value })} /></div>
-          <div><label className="auth-label">Nuova password</label><input type="password" className="auth-input" value={pwForm.newPassword} onChange={(e) => setPwForm({ ...pwForm, newPassword: e.target.value })} /></div>
-          <div><label className="auth-label">Conferma nuova password</label><input type="password" className="auth-input" value={pwForm.confirm} onChange={(e) => setPwForm({ ...pwForm, confirm: e.target.value })} /></div>
-          {pwError && <div className="rounded-md bg-[#DC2626]/10 px-3 py-2 text-sm text-[#DC2626]" role="alert">{pwError}</div>}
-          {pwSuccess && <div className="rounded-md bg-[#16A34A]/10 px-3 py-2 text-sm text-[#16A34A]">Password cambiata con successo</div>}
+          <div><label htmlFor="profile-password-attuale" className="auth-label">Password attuale</label><input id="profile-password-attuale" type="password" className="auth-input" value={pwForm.currentPassword} onChange={(e) => setPwForm({ ...pwForm, currentPassword: e.target.value })} /></div>
+          <div><label htmlFor="profile-nuova-password" className="auth-label">Nuova password</label><input id="profile-nuova-password" type="password" className="auth-input" value={pwForm.newPassword} onChange={(e) => setPwForm({ ...pwForm, newPassword: e.target.value })} /></div>
+          <div><label htmlFor="profile-conferma-nuova-password" className="auth-label">Conferma nuova password</label><input id="profile-conferma-nuova-password" type="password" className="auth-input" value={pwForm.confirm} onChange={(e) => setPwForm({ ...pwForm, confirm: e.target.value })} /></div>
+          {pwError && <div className="rounded-md bg-[#FCE9E9] px-3 py-2 text-sm text-[#B91C1C]" role="alert">{pwError}</div>}
+          {pwSuccess && <div className="rounded-md bg-[#E8F6ED] px-3 py-2 text-sm text-[#15803D]">Password cambiata con successo</div>}
           <button type="submit" disabled={pwSaving} className="auth-btn-primary max-w-xs">
             {pwSaving ? <Loader2 className="size-4 animate-spin" /> : "Aggiorna password"}
           </button>
@@ -571,17 +583,17 @@ function SettingsTab({ user }: { user: SafeUser }) {
         <h3 className="mb-4 flex items-center gap-2 text-base font-bold text-[#1A1A1A]"><Globe className="size-4 text-[#0F4C81]" /> Preferenze</h3>
         <div className="max-w-md space-y-3">
           <div>
-            <label className="auth-label">Lingua</label>
-            <select className="auth-input" defaultValue="it">
+            <label htmlFor="profile-lingua" className="auth-label">Lingua</label>
+            <select id="profile-lingua" className="auth-input" defaultValue="it">
               <option value="it">Italiano</option>
               <option value="en">English</option>
             </select>
           </div>
           <div className="space-y-2 rounded-lg border border-[#E5E7EB] p-4">
             <p className="text-sm font-medium text-[#1A1A1A] flex items-center gap-2"><Bell className="size-4 text-[#0F4C81]" /> Notifiche</p>
-            {["Nuove opportunità matching", "Aggiornamenti candidature", "Messaggi dai datori di lavoro", "Comunicazioni amministrative"].map((label) => (
-              <label key={label} className="flex cursor-pointer items-center gap-2 text-sm text-[#1A1A1A]">
-                <input type="checkbox" defaultChecked className="size-4 rounded border-[#E5E7EB] accent-[#0F4C81]" />
+            {["Nuove opportunità matching", "Aggiornamenti candidature", "Messaggi dai datori di lavoro", "Comunicazioni amministrative"].map((label, index) => (
+              <label key={label} htmlFor={`notify-pref-${index}`} className="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-[#1A1A1A]">
+                <input id={`notify-pref-${index}`} type="checkbox" defaultChecked className="size-5 shrink-0 rounded border-[#E5E7EB] accent-[#0F4C81]" />
                 {label}
               </label>
             ))}
@@ -599,21 +611,21 @@ function SettingsTab({ user }: { user: SafeUser }) {
           </button>
 
           <div className="rounded-lg border border-[#DC2626]/30 bg-[#DC2626]/5 p-4">
-            <p className="mb-3 flex items-center gap-2 text-sm font-bold text-[#DC2626]"><AlertTriangle className="size-4" /> Zona pericolosa</p>
-            <p className="mb-3 text-xs text-[#6B7280]">L'eliminazione dell'account è irreversibile. Tutti i tuoi dati personali verranno anonimizzati conformemente al GDPR.</p>
+            <p className="mb-3 flex items-center gap-2 text-sm font-bold text-[#B91C1C]"><AlertTriangle className="size-4" /> Zona pericolosa</p>
+            <p className="mb-3 text-xs text-[#4B5563]">L'eliminazione dell'account è irreversibile. Tutti i tuoi dati personali verranno anonimizzati conformemente al GDPR.</p>
             {deleteStep === 0 ? (
               <button onClick={() => setDeleteStep(1)} className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white hover:bg-[#b91c1c]">Elimina account</button>
             ) : deleteStep === 1 ? (
               <div className="flex gap-2">
                 <button onClick={() => setDeleteStep(2)} className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white hover:bg-[#b91c1c]">Conferma eliminazione</button>
-                <button onClick={() => setDeleteStep(0)} className="rounded-md border border-[#E5E7EB] bg-white px-4 py-2 text-sm font-medium text-[#6B7280] hover:bg-[#F8F9FA]">Annulla</button>
+                <button onClick={() => setDeleteStep(0)} className="rounded-md border border-[#E5E7EB] bg-white px-4 py-2 text-sm font-medium text-[#4B5563] hover:bg-[#F8F9FA]">Annulla</button>
               </div>
             ) : (
               <div className="flex gap-2">
                 <button onClick={handleDeleteAccount} disabled={deleting} className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white hover:bg-[#b91c1c] disabled:opacity-50">
                   {deleting ? <Loader2 className="size-4 animate-spin" /> : "Elimina definitivamente"}
                 </button>
-                <button onClick={() => setDeleteStep(0)} className="rounded-md border border-[#E5E7EB] bg-white px-4 py-2 text-sm font-medium text-[#6B7280] hover:bg-[#F8F9FA]">Annulla</button>
+                <button onClick={() => setDeleteStep(0)} className="rounded-md border border-[#E5E7EB] bg-white px-4 py-2 text-sm font-medium text-[#4B5563] hover:bg-[#F8F9FA]">Annulla</button>
               </div>
             )}
           </div>
@@ -659,22 +671,27 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
-        <Loader2 className="size-8 animate-spin text-[#0F4C81]" />
-      </div>
+      <main className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
+        <Loader2 className="size-8 animate-spin text-[#0F4C81]" aria-label="Caricamento profilo" />
+      </main>
     );
   }
 
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-20">
+    <main className="min-h-screen bg-[#F8F9FA] pb-20">
+      <Seo
+        title="Il mio profilo"
+        description="Gestisci i tuoi dati, le specialità e i documenti."
+        noindex
+      />
       {/* Header */}
-      <header className="border-b border-[#E5E7EB] bg-white px-4 py-5">
+      <div className="border-b border-[#E5E7EB] bg-white px-4 py-5">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-xl font-bold text-[#1A1A1A]">Il mio profilo</h1>
         </div>
-      </header>
+      </div>
 
       {/* Tab Navigation */}
       <div className="sticky top-0 z-20 border-b border-[#E5E7EB] bg-white/95 backdrop-blur-sm">
@@ -685,13 +702,14 @@ export default function ProfilePage() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                aria-pressed={activeTab === tab.key}
+                className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2 ${
                   activeTab === tab.key
                     ? "bg-[#0F4C81] text-white"
-                    : "bg-[#F8F9FA] text-[#6B7280] hover:bg-[#E5E7EB]"
+                    : "bg-[#F8F9FA] text-[#4B5563] hover:bg-[#E5E7EB]"
                 }`}
               >
-                <Icon className="size-3.5" />
+                <Icon className="size-4" aria-hidden="true" />
                 {tab.label}
               </button>
             );
@@ -700,7 +718,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Tab Content */}
-      <main className="mx-auto max-w-3xl px-4 py-6">
+      <div className="mx-auto max-w-3xl px-4 py-6">
         <div className="auth-card card-brand-in">
           {activeTab === "overview" && user && (
             <OverviewTab user={user} specialities={specialities} onSave={handleSave} saving={saving} />
@@ -709,7 +727,7 @@ export default function ProfilePage() {
           {activeTab === "documents" && <DocumentsTab />}
           {activeTab === "settings" && user && <SettingsTab user={user} />}
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

@@ -1,11 +1,13 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import { api, type ApiError } from "@/lib/api";
 import { isValidEmail } from "@/lib/auth";
+import { Seo } from "@/components/Seo";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
@@ -27,8 +29,12 @@ export default function LoginPage() {
     if (!validate()) return;
     setLoading(true);
     try {
-      await api.login(email, password);
-      navigate("/for-you", { replace: true });
+      const { user } = await api.login(email, password);
+      // Return the visitor to the guarded page that bounced them here.
+      const from = (location.state as { from?: string } | null)?.from;
+      if (user.role === "admin") navigate(from || "/admin/dashboard", { replace: true });
+      else if (!user.onboardingCompleted) navigate("/onboarding", { replace: true });
+      else navigate(from || "/for-you", { replace: true });
     } catch (err) {
       const apiErr = err as ApiError;
       if (apiErr.statusCode === 429) {
@@ -42,11 +48,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
+      <Seo title="Accedi" description="Accedi al tuo account Con noi." noindex />
       <div className="auth-card card-brand-in">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A]">Accedi a Con noi</h1>
-          <p className="mt-2 text-sm text-[#6B7280]">Inserisci le tue credenziali per continuare</p>
+          <p className="mt-2 text-sm text-[#4B5563]">Inserisci le tue credenziali per continuare</p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate className="space-y-5">
@@ -80,7 +87,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPw(!showPw)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1A1A1A]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4B5563] hover:text-[#1A1A1A]"
                 aria-label={showPw ? "Nascondi password" : "Mostra password"}
               >
                 {showPw ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -90,7 +97,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="rounded-md bg-[#DC2626]/10 px-3 py-2 text-sm text-[#DC2626]" role="alert">
+            <div className="rounded-md bg-[#FCE9E9] px-3 py-2 text-sm text-[#B91C1C]" role="alert">
               {error}
             </div>
           )}
@@ -102,12 +109,12 @@ export default function LoginPage() {
 
         <div className="mt-6 flex items-center justify-between text-sm">
           <Link to="/auth/recover" className="auth-link">Password dimenticata?</Link>
-          <span className="text-[#6B7280]">
+          <span className="text-[#4B5563]">
             Non hai un account?{" "}
             <Link to="/auth/signup" className="auth-link">Registrati</Link>
           </span>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -1,4 +1,5 @@
 import { Controller, Post, Get, Body, UseGuards, Res, Req, HttpCode, HttpStatus } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Throttle } from '@nestjs/throttler';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { Request, Response } from 'express';
@@ -17,7 +18,22 @@ import { Public } from '../../common/decorators/public.decorator';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
+
+  /**
+   * `NODE_ENV=production` alone cannot decide this: the API also runs on a
+   * plain-HTTP host or IP during smoke tests, and a `Secure` cookie is dropped
+   * by the browser over http, which looks exactly like "login does nothing".
+   * COOKIE_SECURE overrides the default so HTTPS stays the default in prod.
+   */
+  private get cookieSecure(): boolean {
+    const configured = this.configService.get<string>('COOKIE_SECURE');
+    if (configured !== undefined) return configured === 'true';
+    return this.configService.get<string>('NODE_ENV') === 'production';
+  }
 
   @Public()
   @Post('register')
@@ -92,14 +108,14 @@ export class AuthController {
   private setTokenCookies(res: Response, accessToken: string, refreshToken: string) {
     res.cookie('access_token', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: this.cookieSecure,
       sameSite: 'lax',
       maxAge: 15 * 60 * 1000,
       path: '/',
     });
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: this.cookieSecure,
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/',

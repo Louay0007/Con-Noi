@@ -22,16 +22,16 @@ export function TestimonialMarquee() {
       className="relative overflow-hidden bg-[#fafafa] py-24 font-sans sm:py-28 lg:py-36"
     >
       <div className="bluecrest-container mb-14 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#0a84ff]">
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#0F4C81]">
           Storie di successo
         </p>
         <h2
           id="testimonial-title"
-          className="mt-4 text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-[#07172f]"
+          className="mt-4 text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-[0.96] tracking-[-0.04em] text-[#0F4C81]"
         >
           Chi trova lavoro con noi
         </h2>
-        <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#07172f]/60 sm:text-lg">
+        <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#0F4C81]/82 sm:text-lg">
           Esperienze reali di lavoratori qualificati che hanno trovato nuove opportunità tramite la piattaforma.
         </p>
       </div>
@@ -40,7 +40,7 @@ export function TestimonialMarquee() {
         {reviews.map((review) => (
           <Card
             key={review.id}
-            className="w-[22rem] shrink-0 border-[#07172f]/10 bg-white shadow-[0_2px_12px_rgba(7,23,47,0.06)] sm:w-[26rem]"
+            className="w-[22rem] shrink-0 border-[#0F4C81]/10 bg-white shadow-[0_2px_12px_rgba(7,23,47,0.06)] sm:w-[26rem]"
           >
             <CardContent className="flex flex-col gap-4 p-6">
               <div className="flex items-center gap-3">
@@ -52,11 +52,11 @@ export function TestimonialMarquee() {
                   loading="lazy"
                 />
                 <div>
-                  <p className="text-sm font-semibold text-[#07172f]">{review.name}</p>
-                  <p className="text-xs text-[#07172f]/50">{review.username}</p>
+                  <p className="text-sm font-semibold text-[#0F4C81]">{review.name}</p>
+                  <p className="text-xs text-[#0F4C81]/82">{review.username}</p>
                 </div>
               </div>
-              <blockquote className="text-sm leading-relaxed text-[#07172f]/70">
+              <blockquote className="text-sm leading-relaxed text-[#0F4C81]/82">
                 "{review.body}"
               </blockquote>
             </CardContent>

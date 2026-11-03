@@ -172,7 +172,16 @@ export class ApplicationsService {
     if (filters.postId) query.postId = new Types.ObjectId(filters.postId);
 
     const [items, total] = await Promise.all([
-      this.applicationModel.find(query).sort({ appliedAt: -1 }).skip((filters.page - 1) * filters.limit).limit(filters.limit).exec(),
+      this.applicationModel
+        .find(query)
+        // The admin queue renders the live post next to each application.
+        // Without this populate it fell back to "Posizione non disponibile"
+        // for every row.
+        .populate({ path: 'postId', select: 'title slug company location employmentType status stats' })
+        .sort({ appliedAt: -1 })
+        .skip((filters.page - 1) * filters.limit)
+        .limit(filters.limit)
+        .exec(),
       this.applicationModel.countDocuments(query).exec(),
     ]);
     return { items, total };

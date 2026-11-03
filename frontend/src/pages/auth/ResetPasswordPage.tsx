@@ -2,6 +2,7 @@ import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2, ArrowLeft, CheckCircle2, Eye, EyeOff, AlertTriangle } from "lucide-react";
 import { api, getErrorMessage } from "@/lib/api";
+import { Seo } from "@/components/Seo";
 
 type Strength = "weak" | "fair" | "good" | "strong";
 
@@ -80,9 +81,9 @@ export default function ResetPasswordPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
         <div className="auth-card card-brand-in text-center">
-          <CheckCircle2 className="mx-auto mb-4 size-12 text-[#16A34A]" />
+          <CheckCircle2 className="mx-auto mb-4 size-12 text-[#15803D]" />
           <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A]">Password aggiornata</h1>
-          <p className="mt-3 text-sm leading-relaxed text-[#6B7280]">
+          <p className="mt-3 text-sm leading-relaxed text-[#4B5563]">
             Ora puoi accedere con la nuova password. Ti stiamo reindirizzando al login…
           </p>
           <Link
@@ -100,9 +101,9 @@ export default function ResetPasswordPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
         <div className="auth-card card-brand-in text-center">
-          <AlertTriangle className="mx-auto mb-4 size-12 text-[#D97706]" />
+          <AlertTriangle className="mx-auto mb-4 size-12 text-[#B45309]" />
           <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A]">Link non valido</h1>
-          <p className="mt-3 text-sm leading-relaxed text-[#6B7280]">
+          <p className="mt-3 text-sm leading-relaxed text-[#4B5563]">
             Questo link non contiene un token di reimpostazione. Richiedine uno nuovo.
           </p>
           <Link
@@ -118,10 +119,11 @@ export default function ResetPasswordPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
+      <Seo title="Scegli una nuova password" description="Imposta una nuova password per il tuo account." noindex />
       <div className="auth-card card-brand-in">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A]">Scegli una nuova password</h1>
-          <p className="mt-2 text-sm text-[#6B7280]">
+          <p className="mt-2 text-sm text-[#4B5563]">
             Il link è valido una sola volta. Scegli una password che non usi altrove.
           </p>
         </div>
@@ -147,7 +149,7 @@ export default function ResetPasswordPage() {
               <button
                 type="button"
                 onClick={() => setShowPw(!showPw)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1A1A1A]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4B5563] hover:text-[#1A1A1A]"
                 aria-label={showPw ? "Nascondi password" : "Mostra password"}
               >
                 {showPw ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -169,7 +171,7 @@ export default function ResetPasswordPage() {
                     />
                   ))}
                 </div>
-                <span className="text-xs text-[#6B7280]">{strengthLabels[strength]}</span>
+                <span className="text-xs text-[#4B5563]">{strengthLabels[strength]}</span>
               </div>
             )}
             {fieldErrors.password && <p className="auth-error">{fieldErrors.password}</p>}
@@ -195,7 +197,7 @@ export default function ResetPasswordPage() {
           </div>
 
           {error && (
-            <div className="rounded-md bg-[#DC2626]/10 px-3 py-2 text-sm text-[#DC2626]" role="alert">
+            <div className="rounded-md bg-[#FCE9E9] px-3 py-2 text-sm text-[#B91C1C]" role="alert">
               {error}
             </div>
           )}

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, type FormEvent } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { Loader2, CheckCircle2, Upload, FileText, X, MapPin, Briefcase } from "lucide-react";
 import { api, getErrorMessage, logError, type ApiError, type Post, type SafeUser, type UploadedFile, type Application } from "@/lib/api";
+import { Seo } from "@/components/Seo";
 
 export default function ApplyPage() {
   const { postId } = useParams<{ postId: string }>();
@@ -88,27 +89,27 @@ export default function ApplyPage() {
 
   if (!post && !existingApp) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
-        <Loader2 className="size-8 animate-spin text-[#0F4C81]" />
-      </div>
+      <main className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
+        <Loader2 className="size-8 animate-spin text-[#0F4C81]" aria-label="Caricamento candidatura" />
+      </main>
     );
   }
 
   // Duplicate prevention
   if (existingApp) {
     const statusLabels: Record<string, { label: string; color: string }> = {
-      submitted: { label: "Inviata", color: "bg-[#0F4C81]/10 text-[#0F4C81]" },
-      reviewed: { label: "Esaminata", color: "bg-[#D97706]/10 text-[#D97706]" },
-      accepted: { label: "Accettata", color: "bg-[#16A34A]/10 text-[#16A34A]" },
-      rejected: { label: "Rifiutata", color: "bg-[#DC2626]/10 text-[#DC2626]" },
-      withdrawn: { label: "Ritirata", color: "bg-[#6B7280]/10 text-[#6B7280]" },
+      submitted: { label: "Inviata", color: "bg-[#E8F0F9] text-[#0F4C81]" },
+      reviewed: { label: "Esaminata", color: "bg-[#FDF2E9] text-[#B45309]" },
+      accepted: { label: "Accettata", color: "bg-[#E8F6ED] text-[#15803D]" },
+      rejected: { label: "Rifiutata", color: "bg-[#FCE9E9] text-[#B91C1C]" },
+      withdrawn: { label: "Ritirata", color: "bg-[#6B7280]/10 text-[#4B5563]" },
     };
     const st = statusLabels[existingApp.status] || statusLabels.submitted;
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#F8F9FA] px-4 text-center">
-        <Briefcase className="mb-4 size-12 text-[#6B7280]" />
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#F8F9FA] px-4 text-center">
+        <Briefcase className="mb-4 size-12 text-[#4B5563]" aria-hidden="true" />
         <h1 className="text-xl font-bold text-[#1A1A1A]">Candidatura già inviata</h1>
-        <p className="mt-2 text-sm text-[#6B7280]">
+        <p className="mt-2 text-sm text-[#4B5563]">
           Hai già candidato per <strong>{post?.title}</strong>.
         </p>
         <span className={`mt-3 inline-block rounded-full px-3 py-1 text-xs font-bold ${st.color}`}>
@@ -120,17 +121,17 @@ export default function ApplyPage() {
         >
           Vai alle mie candidature
         </Link>
-      </div>
+      </main>
     );
   }
 
   // Success state
   if (success) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#F8F9FA] px-4 text-center">
-        <CheckCircle2 className="mb-4 size-16 text-[#16A34A]" />
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#F8F9FA] px-4 text-center">
+        <CheckCircle2 className="mb-4 size-16 text-[#15803D]" aria-hidden="true" />
         <h1 className="text-2xl font-bold text-[#1A1A1A]">Candidatura inviata!</h1>
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#6B7280]">
+        <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#4B5563]">
           La tua candidatura per <strong>{post?.title}</strong> è stata ricevuta con successo. Riceverai aggiornamenti sullo stato della selezione.
         </p>
         <div className="mt-6 flex gap-3">
@@ -142,17 +143,22 @@ export default function ApplyPage() {
           </Link>
           <button
             onClick={() => navigate("/for-you")}
-            className="rounded-md border border-[#E5E7EB] bg-white px-6 py-2.5 text-sm font-medium text-[#6B7280] hover:bg-[#F8F9FA]"
+            className="rounded-md border border-[#E5E7EB] bg-white px-6 py-2.5 text-sm font-medium text-[#4B5563] hover:bg-[#F8F9FA]"
           >
             Torna al feed
           </button>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] px-4 py-8 sm:py-12">
+    <main className="min-h-screen bg-[#F8F9FA] px-4 py-8 sm:py-12">
+      <Seo
+        title={`Candidatura: ${post?.title ?? "posizione"}`}
+        description="Invia la tua candidatura con lettera di presentazione e allegati."
+        noindex
+      />
       <div className="mx-auto max-w-[540px]">
         {/* Post snapshot */}
         <div className="mb-6 rounded-lg border border-[#E5E7EB] bg-white p-4">
@@ -161,10 +167,10 @@ export default function ApplyPage() {
               {post.company.name.charAt(0)}
             </div>
             <div className="min-w-0">
-              <h2 className="truncate text-sm font-bold text-[#1A1A1A]">{post.title}</h2>
-              <p className="text-xs text-[#6B7280]">{post.company.name}</p>
-              <div className="mt-1 flex items-center gap-1 text-xs text-[#6B7280]">
-                <MapPin className="size-3" />
+              <p className="truncate text-sm font-bold text-[#1A1A1A]">{post.title}</p>
+              <p className="text-xs text-[#4B5563]">{post.company.name}</p>
+              <div className="mt-1 flex items-center gap-1 text-xs text-[#4B5563]">
+                <MapPin className="size-3" aria-hidden="true" />
                 {post.location.city}{post.location.province ? `, ${post.location.province}` : ""}
               </div>
             </div>
@@ -179,7 +185,7 @@ export default function ApplyPage() {
             <div>
               <label htmlFor="cover-letter" className="auth-label flex justify-between">
                 <span>Lettera di presentazione</span>
-                <span className="font-normal text-[#6B7280]">{coverLetter.length}/4000</span>
+                <span className="font-normal text-[#4B5563]">{coverLetter.length}/4000</span>
               </label>
               <textarea
                 id="cover-letter"
@@ -228,7 +234,7 @@ export default function ApplyPage() {
 
             {/* Attachments */}
             <div>
-              <label className="auth-label">Allegati aggiuntivi</label>
+              <p className="auth-label" id="apply-allegati">Allegati aggiuntivi</p>
               <div className="space-y-2">
                 {attachments.map((att) => (
                   <div key={att.id} className="flex items-center gap-3 rounded-md border border-[#E5E7EB] bg-[#F8F9FA] px-3 py-2">
@@ -237,9 +243,10 @@ export default function ApplyPage() {
                     <button
                       type="button"
                       onClick={() => removeAttachment(att.id)}
-                      className="shrink-0 rounded p-0.5 text-[#6B7280] hover:text-[#DC2626]"
+                      aria-label={`Rimuovi allegato ${att.originalName}`}
+                      className="flex size-11 shrink-0 items-center justify-center rounded text-[#4B5563] hover:text-[#B91C1C]"
                     >
-                      <X className="size-3.5" />
+                      <X className="size-4" aria-hidden="true" />
                     </button>
                   </div>
                 ))}
@@ -247,9 +254,10 @@ export default function ApplyPage() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-[#E5E7EB] py-2.5 text-sm font-medium text-[#6B7280] transition-colors hover:border-[#0F4C81] hover:bg-[#0F4C81]/5 hover:text-[#0F4C81] disabled:opacity-50"
+                  aria-describedby="apply-allegati"
+                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-dashed border-[#E5E7EB] py-2.5 text-sm font-medium text-[#4B5563] transition-colors hover:border-[#0F4C81] hover:bg-[#0F4C81]/5 hover:text-[#0F4C81] disabled:opacity-50"
                 >
-                  {uploading ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
+                  {uploading ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <Upload className="size-4" aria-hidden="true" />}
                   {uploading ? "Caricamento…" : "Aggiungi allegato"}
                 </button>
                 <input
@@ -264,17 +272,24 @@ export default function ApplyPage() {
             </div>
 
             {error && (
-              <div className="rounded-md bg-[#DC2626]/10 px-3 py-2 text-sm text-[#DC2626]" role="alert">
+              <div className="rounded-md bg-[#FCE9E9] px-3 py-2 text-sm text-[#B91C1C]" role="alert">
                 {error}
               </div>
             )}
 
             <button type="submit" disabled={submitting} className="auth-btn-primary">
-              {submitting ? <Loader2 className="size-4 animate-spin" /> : "Invia Candidatura"}
+              {submitting ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  Invio in corso…
+                </>
+              ) : (
+                "Invia Candidatura"
+              )}
             </button>
           </form>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose';
 
 export type ApplicationDocument = Application & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } })
 export class Application {
   @Prop({ type: Types.ObjectId, ref: 'Post', required: true, index: true })
   postId: Types.ObjectId;
@@ -67,9 +67,21 @@ export class Application {
 
   @Prop({ default: null })
   withdrawnAt: Date;
+
+  /** Populated post for admin views; absent unless explicitly populated. */
+  post?: Record<string, unknown>;
 }
 
 export const ApplicationSchema = SchemaFactory.createForClass(Application);
+
+/**
+ * The admin queue reads `application.post.title`. Expose the populated post
+ * under that name without a second query, and keep the raw `postId` intact.
+ */
+ApplicationSchema.virtual('post').get(function (this: Application & { postId?: unknown }) {
+  const populated = this.postId as unknown as Record<string, unknown> | null;
+  return populated && typeof populated === 'object' && 'title' in populated ? populated : undefined;
+});
 
 ApplicationSchema.index({ userId: 1, postId: 1 }, { unique: true });
 ApplicationSchema.index({ status: 1, appliedAt: -1 });

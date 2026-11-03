@@ -55,7 +55,9 @@ export class UsersService {
       city: data.city ?? null,
       specialityIds: data.specialityIds.map((id) => new Types.ObjectId(id)),
       role: data.role || 'worker',
-      onboardingCompleted: data.specialityIds.length > 0,
+      // Sign-up picks specialities, but onboarding (CV + experience) is still
+      // pending. Marking it done here skipped the whole flow.
+      onboardingCompleted: false,
     });
   }
 

@@ -12,7 +12,7 @@ import {
   UpdateProfileDto, UpdateSpecialitiesDto, ChangePasswordDto,
   AdminUpdateUserDto, AdminUpdateStatusDto,
 } from './dto/user.dto';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { UsersQueryDto } from '../../common/dto/query.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -74,30 +74,22 @@ export class UsersController {
   @Roles(Role.Admin)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'List all users (admin)' })
-  async findAll(
-    @Query() pagination: PaginationDto,
-    @Query('role') role?: string,
-    @Query('isActive') isActive?: string,
-    @Query('specialityId') specialityId?: string,
-    @Query('city') city?: string,
-    @Query('q') q?: string,
-    @Query('sort') sort?: string,
-  ) {
+  async findAll(@Query() query: UsersQueryDto) {
     const result = await this.usersService.findAll({
-      page: pagination.page ?? 1,
-      limit: pagination.limit ?? 20,
-      role,
-      isActive: isActive !== undefined ? isActive === 'true' : undefined,
-      specialityId,
-      city,
-      q,
-      sort,
+      page: query.page ?? 1,
+      limit: query.limit ?? 20,
+      role: query.role,
+      isActive: query.isActive === undefined ? undefined : query.isActive === 'true',
+      specialityId: query.specialityId,
+      city: query.city,
+      q: query.q,
+      sort: query.sort,
     });
     return {
       items: result.items.map((u) => this.usersService.toSafeProfile(u)),
       total: result.total,
-      page: pagination.page ?? 1,
-      limit: pagination.limit ?? 20,
+      page: query.page ?? 1,
+      limit: query.limit ?? 20,
     };
   }
 

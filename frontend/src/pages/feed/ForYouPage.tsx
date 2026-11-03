@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Search, Briefcase } from "lucide-react";
 import { api, logError, type Post, type SafeUser } from "@/lib/api";
+import { Seo } from "@/components/Seo";
 import { JobCard, JobCardSkeleton } from "@/components/JobCard";
 
 export default function ForYouPage() {
@@ -87,26 +88,27 @@ export default function ForYouPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8F9FA] px-4 py-8">
+      <main className="min-h-screen bg-[#F8F9FA] px-4 py-8" aria-busy="true">
         <div className="mx-auto max-w-3xl space-y-4">
           <div className="h-8 w-48 animate-pulse rounded bg-[#E5E7EB]" />
           <div className="grid gap-4 sm:grid-cols-2">
             {Array.from({ length: 6 }).map((_, i) => <JobCardSkeleton key={i} />)}
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   // Empty state: no specialities
   if (user && (!user.specialityIds || user.specialityIds.length === 0)) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#F8F9FA] px-4 text-center">
-        <div className="mb-6 flex size-20 items-center justify-center rounded-full bg-[#0F4C81]/10">
-          <Search className="size-10 text-[#0F4C81]" />
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#F8F9FA] px-4 text-center">
+        <Seo title="Completa il tuo profilo" description="Aggiungi le tue specialità per ricevere offerte pertinenti." noindex />
+        <div className="mb-6 flex size-20 items-center justify-center rounded-full bg-[#E8F0F9]">
+          <Search className="size-10 text-[#0F4C81]" aria-hidden="true" />
         </div>
         <h1 className="text-2xl font-bold text-[#1A1A1A]">Completa il tuo profilo</h1>
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#6B7280]">
+        <p className="mt-2 max-w-sm text-sm leading-relaxed text-[#4B5563]">
           Aggiungi le tue specialità per ricevere opportunità di lavoro personalizzate e pertinenti alla tua esperienza.
         </p>
         <button
@@ -115,45 +117,50 @@ export default function ForYouPage() {
         >
           Completa profilo
         </button>
-      </div>
+      </main>
     );
   }
 
   const now = new Date().toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-20">
+    <main className="min-h-screen bg-[#F8F9FA] pb-20">
+      <Seo
+        title="Opportunità per te"
+        description="Offerte di lavoro selezionate in base alle tue specialità."
+        noindex
+      />
       {/* Pull-to-refresh indicator */}
       {refreshing && (
         <div className="flex justify-center py-3">
-          <Loader2 className="size-5 animate-spin text-[#0F4C81]" />
+          <Loader2 className="size-5 animate-spin text-[#0F4C81]" aria-label="Aggiornamento in corso" />
         </div>
       )}
 
       {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-[#E5E7EB] bg-white/95 px-4 py-4 backdrop-blur-sm">
+      <div className="sticky top-0 z-30 border-b border-[#E5E7EB] bg-white/95 px-4 py-4 backdrop-blur-sm">
         <div className="mx-auto flex max-w-3xl items-end justify-between">
           <div>
             <h1 className="text-xl font-bold text-[#1A1A1A]">Opportunità per te</h1>
-            <p className="text-xs text-[#6B7280]">Aggiornato alle {now}</p>
+            <p className="text-xs text-[#4B5563]">Aggiornato alle {now}</p>
           </div>
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="rounded-md p-2 text-[#6B7280] hover:bg-[#F8F9FA] hover:text-[#0F4C81] disabled:opacity-50"
+            className="icon-action text-[#4B5563] hover:bg-[#F8F9FA] hover:text-[#0F4C81] disabled:opacity-50"
             aria-label="Aggiorna feed"
           >
-            <Loader2 className={`size-4 ${refreshing ? "animate-spin" : ""}`} />
+            <Loader2 className={`size-5 ${refreshing ? "animate-spin" : ""}`} aria-hidden="true" />
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Feed grid */}
-      <main className="mx-auto max-w-3xl px-4 py-6">
+      <div className="mx-auto max-w-3xl px-4 py-6">
         {posts.length === 0 ? (
           <div className="py-16 text-center">
-            <Briefcase className="mx-auto mb-4 size-12 text-[#6B7280]" />
-            <p className="text-sm text-[#6B7280]">Nessuna opportunità disponibile al momento.</p>
+            <Briefcase className="mx-auto mb-4 size-12 text-[#4B5563]" aria-hidden="true" />
+            <p className="text-sm text-[#4B5563]">Nessuna opportunità disponibile al momento.</p>
           </div>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2">
@@ -178,14 +185,14 @@ export default function ForYouPage() {
 
         {/* End of feed */}
         {!cursor && posts.length > 0 && (
-          <p className="py-8 text-center text-xs text-[#6B7280]">
+          <p className="py-8 text-center text-xs text-[#4B5563]">
             Hai visto tutte le opportunità disponibili
           </p>
         )}
 
         {/* Infinite scroll sentinel */}
         <div ref={sentinelRef} className="h-1" />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

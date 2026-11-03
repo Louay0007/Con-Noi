@@ -8,7 +8,7 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles, Role } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ApplicationsService } from './applications.service';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { ApplicationsQueryDto } from '../../common/dto/query.dto';
 
 @ApiTags('Applications')
 @Controller('applications')
@@ -56,16 +56,12 @@ export class ApplicationsController {
   @Roles(Role.Admin)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'List all applications (admin)' })
-  async findAll(
-    @Query() pagination: PaginationDto,
-    @Query('status') status?: string,
-    @Query('postId') postId?: string,
-  ) {
+  async findAll(@Query() query: ApplicationsQueryDto) {
     return this.applicationsService.findAll({
-      page: pagination.page ?? 1,
-      limit: pagination.limit ?? 20,
-      status,
-      postId,
+      page: query.page ?? 1,
+      limit: query.limit ?? 20,
+      status: query.status,
+      postId: query.postId,
     });
   }
 

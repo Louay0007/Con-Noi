@@ -88,19 +88,19 @@ export function MediterraFaq() {
       <div className="bluecrest-container relative grid gap-14 lg:grid-cols-[minmax(17rem,0.72fr)_minmax(0,1.28fr)] lg:gap-24">
         <div className="lg:sticky lg:top-24 lg:self-start">
           <div data-faq-heading>
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#0a84ff]">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#0F4C81]">
               Domande frequenti
             </p>
             <h2
               id="faq-heading"
-              className="mt-5 max-w-[10ch] text-[clamp(3rem,5.4vw,6rem)] font-semibold leading-[0.94] tracking-[-0.06em] text-[#07172f]"
+              className="mt-5 max-w-[10ch] text-[clamp(3rem,5.4vw,6rem)] font-semibold leading-[0.94] tracking-[-0.06em] text-[#0F4C81]"
             >
               Hai domande? Abbiamo le risposte.
             </h2>
           </div>
           <p
             data-faq-intro
-            className="mt-7 max-w-md text-base leading-relaxed text-[#07172f]/65 sm:text-lg"
+            className="mt-7 max-w-md text-base leading-relaxed text-[#0F4C81]/82 sm:text-lg"
           >
             Scopri come funziona Con noi: registrazione, candidature, messaggistica e tutto ciò che devi sapere per trovare il lavoro giusto.
           </p>
@@ -109,24 +109,24 @@ export function MediterraFaq() {
         <Accordion
           type="single"
           collapsible
-          className="border-t border-[#07172f]/15"
+          className="border-t border-[#0F4C81]/20"
         >
           {faqs.map((faq, index) => (
             <AccordionItem
               key={faq.question}
               value={`item-${index + 1}`}
               data-faq-item
-              className="border-[#07172f]/15"
+              className="border-[#0F4C81]/20"
             >
-              <AccordionTrigger className="min-h-20 gap-5 py-5 text-left text-[1.05rem] font-semibold leading-snug tracking-[-0.02em] text-[#07172f] hover:text-[#0a84ff] hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0a84ff] focus-visible:ring-offset-4 focus-visible:ring-offset-white sm:min-h-24 sm:py-6 sm:text-xl [&>svg]:size-5 [&>svg]:text-[#0a84ff]">
+              <AccordionTrigger className="min-h-20 gap-5 py-5 text-left text-[1.05rem] font-semibold leading-snug tracking-[-0.02em] text-[#0F4C81] hover:text-[#0F4C81] hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-4 focus-visible:ring-offset-white sm:min-h-24 sm:py-6 sm:text-xl [&>svg]:size-5 [&>svg]:text-[#0F4C81]">
                 <span className="flex items-start gap-4 sm:gap-6">
-                  <span className="mt-0.5 shrink-0 font-mono text-[0.68rem] font-semibold tracking-[0.14em] text-[#0a84ff] sm:mt-1">
+                  <span className="mt-0.5 shrink-0 font-mono text-[0.68rem] font-semibold tracking-[0.14em] text-[#0F4C81] sm:mt-1">
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span>{faq.question}</span>
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="pb-7 pl-[2.7rem] pr-10 text-[0.98rem] leading-relaxed text-[#07172f]/68 sm:pb-8 sm:pl-[3.8rem] sm:pr-14 sm:text-base">
+              <AccordionContent className="pb-7 pl-[2.7rem] pr-10 text-[0.98rem] leading-relaxed text-[#0F4C81]/82 sm:pb-8 sm:pl-[3.8rem] sm:pr-14 sm:text-base">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>

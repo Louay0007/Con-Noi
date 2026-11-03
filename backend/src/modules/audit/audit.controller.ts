@@ -4,7 +4,7 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles, Role } from '../../common/decorators/roles.decorator';
 import { AuditService } from './audit.service';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import { AuditQueryDto } from '../../common/dto/query.dto';
 
 @ApiTags('Audit')
 @Controller('audit')
@@ -16,22 +16,15 @@ export class AuditController {
   @Get()
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Query audit logs (admin)' })
-  async findAll(
-    @Query() pagination: PaginationDto,
-    @Query('actorId') actorId?: string,
-    @Query('entity') entity?: string,
-    @Query('action') action?: string,
-    @Query('from') from?: string,
-    @Query('to') to?: string,
-  ) {
+  async findAll(@Query() query: AuditQueryDto) {
     return this.auditService.findAll({
-      page: pagination.page ?? 1,
-      limit: pagination.limit ?? 20,
-      actorId,
-      entity,
-      action,
-      from,
-      to,
+      page: query.page ?? 1,
+      limit: query.limit ?? 20,
+      actorId: query.actorId,
+      entity: query.entity,
+      action: query.action,
+      from: query.from,
+      to: query.to,
     });
   }
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Heart, MapPin, Clock, Briefcase, Euro } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Heart, MapPin, Clock, Euro } from "lucide-react";
 import { api, type Post } from "@/lib/api";
 
 type JobCardProps = {
@@ -32,9 +33,9 @@ function formatSalary(salary?: Post["salary"]): string {
 }
 
 function matchColor(score: number): string {
-  if (score >= 75) return "bg-[#16A34A]";
-  if (score >= 50) return "bg-[#D97706]";
-  return "bg-[#DC2626]";
+  if (score >= 75) return "bg-[#15803D]";
+  if (score >= 50) return "bg-[#B45309]";
+  return "bg-[#B91C1C]";
 }
 
 export function JobCard({ post, liked: initialLiked, showMatchScore, onApply }: JobCardProps) {
@@ -61,21 +62,18 @@ export function JobCard({ post, liked: initialLiked, showMatchScore, onApply }: 
     ? post.specialityNames.slice(0, 3)
     : [];
   const overflowCount = (post.specialityNames?.length ?? 0) - 3;
+  const href = `/posts/${post._id}`;
 
   return (
-    <article className="group relative flex flex-col rounded-lg border border-[#E5E7EB] bg-white p-5 transition-shadow duration-150 hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)]">
+    <article className="group relative flex flex-col rounded-lg border border-[#E5E7EB] bg-white p-5 transition-shadow duration-150 hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)] has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-[#0F4C81] has-[a:focus-visible]:ring-offset-2">
       {/* Badges */}
       {(post.isUrgent || post.isFeatured) && (
-        <div className="absolute right-3 top-3 flex gap-1.5">
+        <div className="absolute right-3 top-3 flex flex-wrap justify-end gap-1.5">
           {post.isUrgent && (
-            <span className="rounded-full bg-[#DC2626]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#DC2626]">
-              Urgente
-            </span>
+            <span className="status-pill status-pill--danger uppercase tracking-wide">Urgente</span>
           )}
           {post.isFeatured && (
-            <span className="rounded-full bg-[#E67E22]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#E67E22]">
-              In evidenza
-            </span>
+            <span className="status-pill status-pill--warning uppercase tracking-wide">In evidenza</span>
           )}
         </div>
       )}
@@ -86,9 +84,9 @@ export function JobCard({ post, liked: initialLiked, showMatchScore, onApply }: 
           {post.company.name.charAt(0)}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-[#6B7280]">{post.company.name}</p>
-          <div className="flex items-center gap-1 text-xs text-[#6B7280]">
-            <MapPin className="size-3" />
+          <p className="truncate text-sm font-medium text-[#4B5563]">{post.company.name}</p>
+          <div className="flex items-center gap-1 text-xs text-[#4B5563]">
+            <MapPin className="size-3" aria-hidden="true" />
             <span className="truncate">
               {post.location.city}
               {post.location.province ? `, ${post.location.province}` : ""}
@@ -97,14 +95,21 @@ export function JobCard({ post, liked: initialLiked, showMatchScore, onApply }: 
         </div>
       </div>
 
-      {/* Title */}
-      <h3 className="mt-3 line-clamp-2 text-base font-bold leading-snug text-[#1A1A1A] group-hover:text-[#0F4C81]">
-        {post.title}
-      </h3>
+      {/* Title. The link stretches over the whole card via ::after so the card is
+          clickable and keyboard-reachable, while the like/apply buttons below sit
+          above it on the z-axis and keep their own hit areas. */}
+      <h2 className="mt-3 line-clamp-2 text-base font-bold leading-snug text-[#1A1A1A] group-hover:text-[#0F4C81]">
+        <Link
+          to={href}
+          className="outline-none after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
+        >
+          {post.title}
+        </Link>
+      </h2>
 
       {/* Salary */}
       <div className="mt-2 flex items-center gap-1.5">
-        <Euro className="size-3.5 text-[#6B7280]" />
+        <Euro className="size-3.5 text-[#4B5563]" aria-hidden="true" />
         <span className="text-sm font-medium text-[#1A1A1A]">{formatSalary(post.salary)}</span>
       </div>
 
@@ -113,13 +118,13 @@ export function JobCard({ post, liked: initialLiked, showMatchScore, onApply }: 
         {visibleSpecs.map((specName) => (
           <span
             key={specName}
-            className="rounded-full bg-[#F8F9FA] px-2 py-0.5 text-[11px] font-medium text-[#6B7280]"
+            className="rounded-full bg-[#F1F3F5] px-2 py-0.5 text-xs font-medium text-[#4B5563]"
           >
             {specName}
           </span>
         ))}
         {overflowCount > 0 && (
-          <span className="rounded-full bg-[#F8F9FA] px-2 py-0.5 text-[11px] font-medium text-[#6B7280]">
+          <span className="rounded-full bg-[#F1F3F5] px-2 py-0.5 text-xs font-medium text-[#4B5563]">
             +{overflowCount}
           </span>
         )}
@@ -129,12 +134,16 @@ export function JobCard({ post, liked: initialLiked, showMatchScore, onApply }: 
       {showMatchScore && post.matchScore !== undefined && (
         <div className="mt-3">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-medium text-[#6B7280]">Match</span>
+            <span className="font-medium text-[#4B5563]">Match</span>
             <span className="font-bold text-[#1A1A1A]">{Math.round(post.matchScore)}%</span>
           </div>
-          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[#E5E7EB]">
+          <div
+            className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-[#E5E7EB]"
+            role="img"
+            aria-label={`Compatibilità ${Math.round(post.matchScore)} percento`}
+          >
             <div
-              className={`h-full rounded-full transition-all duration-500 ${matchColor(post.matchScore)}`}
+              className={`h-full rounded-full transition-[width] duration-500 ease-out ${matchColor(post.matchScore)}`}
               style={{ width: `${post.matchScore}%` }}
             />
           </div>
@@ -143,28 +152,29 @@ export function JobCard({ post, liked: initialLiked, showMatchScore, onApply }: 
 
       {/* Footer */}
       <div className="mt-auto flex items-center justify-between pt-4">
-        <div className="flex items-center gap-3 text-xs text-[#6B7280]">
+        <div className="flex items-center gap-3 text-xs text-[#4B5563]">
           <span className="flex items-center gap-1">
-            <Clock className="size-3" />
+            <Clock className="size-3" aria-hidden="true" />
             {timeAgo(post.publishedAt || post.createdAt)}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="relative z-10 flex items-center gap-2">
           <button
             onClick={handleLike}
-            className={`flex size-9 items-center justify-center rounded-full transition-colors ${
+            className={`flex size-11 items-center justify-center rounded-full transition-colors ${
               liked
-                ? "bg-[#DC2626]/10 text-[#DC2626]"
-                : "bg-[#F8F9FA] text-[#6B7280] hover:bg-[#E5E7EB]"
+                ? "bg-[#FCE9E9] text-[#B91C1C]"
+                : "bg-[#F8F9FA] text-[#4B5563] hover:bg-[#E5E7EB]"
             }`}
             aria-label={liked ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+            aria-pressed={liked}
           >
-            <Heart className={`size-4 ${liked ? "fill-current" : ""}`} />
+            <Heart className={`size-4 ${liked ? "fill-current" : ""}`} aria-hidden="true" />
           </button>
           {onApply && (
             <button
               onClick={(e) => { e.preventDefault(); e.stopPropagation(); onApply(post); }}
-              className="rounded-md bg-[#0F4C81] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#0a3d6b]"
+              className="min-h-11 rounded-md bg-[#0F4C81] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#0a3d6b]"
             >
               Candidati
             </button>
@@ -177,7 +187,7 @@ export function JobCard({ post, liked: initialLiked, showMatchScore, onApply }: 
 
 export function JobCardSkeleton() {
   return (
-    <div className="animate-pulse rounded-lg border border-[#E5E7EB] bg-white p-5">
+    <div className="animate-pulse rounded-lg border border-[#E5E7EB] bg-white p-5" aria-hidden="true">
       <div className="flex items-start gap-3">
         <div className="size-12 rounded-lg bg-[#E5E7EB]" />
         <div className="flex-1 space-y-2">

@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { api, fileDownloadUrl, logError, type Post } from "@/lib/api";
 import { JobCard } from "@/components/JobCard";
+import { Seo } from "@/components/Seo";
 
 function formatSalary(salary?: Post["salary"]): string {
   if (!salary) return "Trattativa riservata";
@@ -97,7 +98,7 @@ export default function JobDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F8F9FA] px-4 py-8">
+      <main className="min-h-screen bg-[#F8F9FA] px-4 py-8">
         <div className="mx-auto max-w-3xl space-y-6">
           <div className="h-48 animate-pulse rounded-lg bg-[#E5E7EB]" />
           <div className="space-y-3">
@@ -110,23 +111,23 @@ export default function JobDetailPage() {
             ))}
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   if (error || !post) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#F8F9FA] px-4 text-center">
-        <Briefcase className="mb-4 size-12 text-[#6B7280]" />
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#F8F9FA] px-4 text-center">
+        <Briefcase className="mb-4 size-12 text-[#4B5563]" aria-hidden="true" />
         <h1 className="text-xl font-bold text-[#1A1A1A]">Opportunità non trovata</h1>
-        <p className="mt-2 text-sm text-[#6B7280]">Questa posizione potrebbe essere stata chiusa o rimossa.</p>
+        <p className="mt-2 text-sm text-[#4B5563]">Questa posizione potrebbe essere stata chiusa o rimossa.</p>
         <button
           onClick={() => navigate(-1)}
           className="mt-6 inline-flex items-center gap-2 rounded-md bg-[#0F4C81] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#0a3d6b]"
         >
-          <ChevronLeft className="size-4" /> Torna indietro
+          <ChevronLeft className="size-4" aria-hidden="true" /> Torna indietro
         </button>
-      </div>
+      </main>
     );
   }
 
@@ -137,14 +138,18 @@ export default function JobDetailPage() {
         <div className="mx-auto flex max-w-3xl items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-1 text-sm font-medium text-[#6B7280] hover:text-[#0F4C81]"
+            className="inline-flex min-h-11 items-center gap-1 rounded-md pr-3 text-sm font-medium text-[#4B5563] hover:text-[#0F4C81] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2"
           >
-            <ChevronLeft className="size-4" /> Indietro
+            <ChevronLeft className="size-4" aria-hidden="true" /> Indietro
           </button>
         </div>
       </div>
 
       <main className="mx-auto max-w-3xl px-4 py-6">
+        <Seo
+          title={`${post.title} — ${post.company?.name ?? "Con noi"}`}
+          description={(post.description ?? "").replace(/\s+/g, " ").trim().slice(0, 155) || "Dettaglio dell'opportunità di lavoro."}
+        />
         {/* Hero */}
         <div className="relative overflow-hidden rounded-xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08)]">
           {post.coverFileId && (
@@ -164,12 +169,12 @@ export default function JobDetailPage() {
                 {post.company.name.charAt(0)}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-[#6B7280]">{post.company.name}</p>
-                <div className="mt-0.5 flex items-center gap-1.5 text-xs text-[#6B7280]">
+                <p className="text-sm font-medium text-[#4B5563]">{post.company.name}</p>
+                <div className="mt-0.5 flex items-center gap-1.5 text-xs text-[#4B5563]">
                   <MapPin className="size-3" />
                   {post.location.city}
                   {post.location.province ? `, ${post.location.province}` : ""}
-                  {post.location.remote && <span className="ml-1 rounded bg-[#0F4C81]/10 px-1.5 py-0.5 text-[10px] font-medium text-[#0F4C81]">Remoto</span>}
+                  {post.location.remote && <span className="ml-1 rounded bg-[#E8F0F9] px-1.5 py-0.5 text-xs font-medium text-[#0F4C81]">Remoto</span>}
                 </div>
               </div>
             </div>
@@ -177,7 +182,7 @@ export default function JobDetailPage() {
             {/* Title + view counter */}
             <div className="mt-4 flex items-start justify-between gap-3">
               <h1 className="text-2xl font-bold leading-tight text-[#1A1A1A]">{post.title}</h1>
-              <span className="flex shrink-0 items-center gap-1 text-xs text-[#6B7280]">
+              <span className="flex shrink-0 items-center gap-1 text-xs text-[#4B5563]">
                 <Eye className="size-3" /> {post.stats.views} visualizzazioni
               </span>
             </div>
@@ -185,10 +190,10 @@ export default function JobDetailPage() {
             {/* Badges */}
             <div className="mt-3 flex flex-wrap gap-2">
               {post.isUrgent && (
-                <span className="rounded-full bg-[#DC2626]/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-[#DC2626]">Urgente</span>
+                <span className="rounded-full bg-[#FCE9E9] px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-[#B91C1C]">Urgente</span>
               )}
               {post.isFeatured && (
-                <span className="rounded-full bg-[#E67E22]/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-[#E67E22]">In evidenza</span>
+                <span className="rounded-full bg-[#FDF2E9] px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-[#B45309]">In evidenza</span>
               )}
             </div>
           </div>
@@ -198,37 +203,37 @@ export default function JobDetailPage() {
         <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
           <div className="rounded-lg border border-[#E5E7EB] bg-white p-4">
             <Briefcase className="mb-2 size-4 text-[#0F4C81]" />
-            <p className="text-xs text-[#6B7280]">Tipo di impiego</p>
+            <p className="text-xs text-[#4B5563]">Tipo di impiego</p>
             <p className="mt-0.5 text-sm font-semibold text-[#1A1A1A]">{EMPLOYMENT_LABELS[post.employmentType] || post.employmentType}</p>
           </div>
           {post.contractType && (
             <div className="rounded-lg border border-[#E5E7EB] bg-white p-4">
               <FileText className="mb-2 size-4 text-[#0F4C81]" />
-              <p className="text-xs text-[#6B7280]">Contratto</p>
+              <p className="text-xs text-[#4B5563]">Contratto</p>
               <p className="mt-0.5 text-sm font-semibold text-[#1A1A1A]">{CONTRACT_LABELS[post.contractType] || post.contractType}</p>
             </div>
           )}
           <div className="rounded-lg border border-[#E5E7EB] bg-white p-4">
             <Euro className="mb-2 size-4 text-[#0F4C81]" />
-            <p className="text-xs text-[#6B7280]">Retribuzione</p>
+            <p className="text-xs text-[#4B5563]">Retribuzione</p>
             <p className="mt-0.5 text-sm font-semibold text-[#1A1A1A]">{formatSalary(post.salary)}</p>
           </div>
           {post.schedule && (
             <div className="rounded-lg border border-[#E5E7EB] bg-white p-4">
               <Clock className="mb-2 size-4 text-[#0F4C81]" />
-              <p className="text-xs text-[#6B7280]">Orario</p>
+              <p className="text-xs text-[#4B5563]">Orario</p>
               <p className="mt-0.5 text-sm font-semibold text-[#1A1A1A]">{post.schedule.hoursPerWeek}h/settimana</p>
             </div>
           )}
           <div className="rounded-lg border border-[#E5E7EB] bg-white p-4">
             <Users className="mb-2 size-4 text-[#0F4C81]" />
-            <p className="text-xs text-[#6B7280]">Posizioni aperte</p>
+            <p className="text-xs text-[#4B5563]">Posizioni aperte</p>
             <p className="mt-0.5 text-sm font-semibold text-[#1A1A1A]">{post.openings}</p>
           </div>
           {post.applicationDeadline && (
             <div className="rounded-lg border border-[#E5E7EB] bg-white p-4">
               <Calendar className="mb-2 size-4 text-[#0F4C81]" />
-              <p className="text-xs text-[#6B7280]">Scadenza</p>
+              <p className="text-xs text-[#4B5563]">Scadenza</p>
               <p className="mt-0.5 text-sm font-semibold text-[#1A1A1A]">
                 {new Date(post.applicationDeadline).toLocaleDateString("it-IT")}
               </p>
@@ -310,9 +315,9 @@ export default function JobDetailPage() {
                   <FileText className="size-5 text-[#0F4C81]" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-[#1A1A1A]">{att.label || "Documento"}</p>
-                    <p className="text-xs text-[#6B7280]">{att.kind}</p>
+                    <p className="text-xs text-[#4B5563]">{att.kind}</p>
                   </div>
-                  <Download className="size-4 text-[#6B7280]" />
+                  <Download className="size-4 text-[#4B5563]" />
                 </a>
               ))}
             </div>
@@ -339,16 +344,16 @@ export default function JobDetailPage() {
             onClick={handleLike}
             className={`flex size-11 items-center justify-center rounded-full border transition-colors ${
               liked
-                ? "border-[#DC2626]/30 bg-[#DC2626]/10 text-[#DC2626]"
-                : "border-[#E5E7EB] bg-white text-[#6B7280]"
+                ? "border-[#DC2626]/30 bg-[#FCE9E9] text-[#B91C1C]"
+                : "border-[#E5E7EB] bg-white text-[#4B5563]"
             }`}
             aria-label={liked ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
           >
-            <Heart className={`size-5 ${liked ? "fill-current" : ""}`} />
+            <Heart className={`size-5 ${liked ? "fill-current" : ""}`} aria-hidden="true" />
           </button>
           <button
             onClick={handleApply}
-            className="flex-1 rounded-md bg-[#0F4C81] py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0a3d6b]"
+            className="min-h-11 flex-1 rounded-md bg-[#0F4C81] text-sm font-semibold text-white transition-colors hover:bg-[#0a3d6b]"
           >
             Candidati
           </button>
@@ -362,16 +367,16 @@ export default function JobDetailPage() {
             onClick={handleLike}
             className={`flex size-11 items-center justify-center rounded-full border transition-colors ${
               liked
-                ? "border-[#DC2626]/30 bg-[#DC2626]/10 text-[#DC2626]"
-                : "border-[#E5E7EB] bg-white text-[#6B7280] hover:bg-[#F8F9FA]"
+                ? "border-[#DC2626]/30 bg-[#FCE9E9] text-[#B91C1C]"
+                : "border-[#E5E7EB] bg-white text-[#4B5563] hover:bg-[#F8F9FA]"
             }`}
             aria-label={liked ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
           >
-            <Heart className={`size-5 ${liked ? "fill-current" : ""}`} />
+            <Heart className={`size-5 ${liked ? "fill-current" : ""}`} aria-hidden="true" />
           </button>
           <button
             onClick={handleApply}
-            className="rounded-md bg-[#0F4C81] px-8 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#0a3d6b]"
+            className="min-h-11 rounded-md bg-[#0F4C81] px-8 text-sm font-semibold text-white transition-colors hover:bg-[#0a3d6b]"
           >
             Candidati
           </button>

@@ -1,6 +1,8 @@
-.brand-showcase { color: #080808; padding: 40px 0 32px; }
-.brand-showcase h2 { margin: 0 auto 32px; padding: 0 24px; text-align: center; font-size: 40px; font-weight: 700; line-height: 1.2; letter-spacing: 0; }
-.brand-showcase__rows { width: 86%; max-width: 2000px; margin: auto; display: grid; gap: 16px; }
+.brand-showcase { color: #080808; padding: 40px 0 32px; overflow-x: clip; }
+.brand-showcase h2 { margin: 0 auto 32px; padding: 0 24px; text-align: center; font-size: 40px; font-weight: 700; line-height: 1.2; letter-spacing: 0; text-wrap: balance; }
+/* The track is 200% wide by design; the rows wrapper has to clip it or the
+   whole document becomes ~7000px wide and the page scrolls sideways. */
+.brand-showcase__rows { width: 86%; max-width: 2000px; margin: auto; display: grid; gap: 16px; overflow: hidden; }
 .brand-showcase__track { display: flex; width: 200%; min-width: 2240px; animation: brand-showcase-scroll 60s linear infinite; }
 .brand-showcase__sequence { display: flex; align-items: center; justify-content: space-around; flex: 0 0 50%; }
 .brand-showcase__logo { flex: 1 1 0; min-width: 0; height: 124px; display: grid; place-items: center; padding: 0 12px; }
@@ -12,7 +14,7 @@
 .brand-showcase__toggle { display: grid; place-items: center; flex: 0 0 44px; height: 44px; border-radius: 50%; }
 .brand-showcase__toggle svg { width: 16px; height: 16px; color: #636363; }
 .brand-showcase__toggle:hover { background: #f3f3f3; }
-.brand-showcase__toggle:focus-visible { outline: 2px solid #0a84ff; outline-offset: 2px; }
+.brand-showcase__toggle:focus-visible { outline: 2px solid #0F4C81; outline-offset: 2px; }
 @keyframes brand-showcase-scroll { to { transform: translateX(-50%); } }
 @media (min-width: 1800px) {
   .brand-showcase { padding-top: 56px; padding-bottom: 40px; }

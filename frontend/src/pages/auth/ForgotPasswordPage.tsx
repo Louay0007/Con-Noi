@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Loader2, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { api, type ApiError } from "@/lib/api";
 import { isValidEmail } from "@/lib/auth";
+import { Seo } from "@/components/Seo";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -40,15 +41,16 @@ export default function ForgotPasswordPage() {
 
   if (sent) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
+      <main className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
+        <Seo title="Controlla la tua email" description="Istruzioni per reimpostare la password inviate." noindex />
         <div className="auth-card card-brand-in text-center">
-          <CheckCircle2 className="mx-auto mb-4 size-12 text-[#16A34A]" />
+          <CheckCircle2 className="mx-auto mb-4 size-12 text-[#15803D]" aria-hidden="true" />
           <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A]">Controlla la tua email</h1>
-          <p className="mt-3 text-sm leading-relaxed text-[#6B7280]">
+          <p className="mt-3 text-sm leading-relaxed text-[#4B5563]">
             Se esiste un account associato a <strong>{email}</strong>, riceverai a breve un'email con
             il link per reimpostare la password. Il link scade dopo un'ora.
           </p>
-          <p className="mt-3 text-xs leading-relaxed text-[#6B7280]">
+          <p className="mt-3 text-xs leading-relaxed text-[#4B5563]">
             Non lo trovi? Controlla la cartella spam. Il link è valido una sola volta.
           </p>
           <Link
@@ -59,16 +61,17 @@ export default function ForgotPasswordPage() {
             Torna al login
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
+      <Seo title="Password dimenticata" description="Richiedi il link per reimpostare la password." noindex />
       <div className="auth-card card-brand-in">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A]">Password dimenticata?</h1>
-          <p className="mt-2 text-sm text-[#6B7280]">
+          <p className="mt-2 text-sm text-[#4B5563]">
             Inserisci la tua email e ti invieremo le istruzioni per reimpostarla.
           </p>
         </div>
@@ -90,7 +93,7 @@ export default function ForgotPasswordPage() {
           </div>
 
           {error && (
-            <div className="rounded-md bg-[#DC2626]/10 px-3 py-2 text-sm text-[#DC2626]" role="alert">
+            <div className="rounded-md bg-[#FCE9E9] px-3 py-2 text-sm text-[#B91C1C]" role="alert">
               {error}
             </div>
           )}
@@ -110,6 +113,6 @@ export default function ForgotPasswordPage() {
           </Link>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

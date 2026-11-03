@@ -5,6 +5,7 @@ import {
   XCircle, CheckCircle2, Clock, ChevronRight, FileText,
 } from "lucide-react";
 import { api, logError, type Application, type SafeUser } from "@/lib/api";
+import { Seo } from "@/components/Seo";
 
 const STATUS_TABS = [
   { key: "", label: "Tutte" },
@@ -16,11 +17,11 @@ const STATUS_TABS = [
 ] as const;
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: typeof Clock }> = {
-  submitted: { label: "Inviata", color: "bg-[#0F4C81]/10 text-[#0F4C81]", icon: Clock },
-  reviewed: { label: "Esaminata", color: "bg-[#D97706]/10 text-[#D97706]", icon: FileText },
-  accepted: { label: "Accettata", color: "bg-[#16A34A]/10 text-[#16A34A]", icon: CheckCircle2 },
-  rejected: { label: "Rifiutata", color: "bg-[#DC2626]/10 text-[#DC2626]", icon: XCircle },
-  withdrawn: { label: "Ritirata", color: "bg-[#6B7280]/10 text-[#6B7280]", icon: XCircle },
+  submitted: { label: "Inviata", color: "bg-[#E8F0F9] text-[#0F4C81]", icon: Clock },
+  reviewed: { label: "Esaminata", color: "bg-[#FDF2E9] text-[#B45309]", icon: FileText },
+  accepted: { label: "Accettata", color: "bg-[#E8F6ED] text-[#15803D]", icon: CheckCircle2 },
+  rejected: { label: "Rifiutata", color: "bg-[#FCE9E9] text-[#B91C1C]", icon: XCircle },
+  withdrawn: { label: "Ritirata", color: "bg-[#6B7280]/10 text-[#4B5563]", icon: XCircle },
 };
 
 function formatDate(d: string) {
@@ -83,23 +84,29 @@ export default function ApplicationsPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
-        <Loader2 className="size-8 animate-spin text-[#0F4C81]" />
-      </div>
+      <main className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
+        <h1 className="sr-only">Le mie candidature</h1>
+        <Loader2 className="size-8 animate-spin text-[#0F4C81]" aria-label="Caricamento candidature" />
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-20">
+    <main className="min-h-screen bg-[#F8F9FA] pb-20">
+      <Seo
+        title="Le mie candidature"
+        description="Tieni traccia dello stato di ogni candidatura inviata."
+        noindex
+      />
       {/* Header */}
-      <header className="border-b border-[#E5E7EB] bg-white px-4 py-5">
+      <div className="border-b border-[#E5E7EB] bg-white px-4 py-5">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-xl font-bold text-[#1A1A1A]">Le mie candidature</h1>
-          <p className="mt-1 text-sm text-[#6B7280]">
+          <p className="mt-1 text-sm text-[#4B5563]">
             Tieni traccia dello stato delle tue candidature
           </p>
         </div>
-      </header>
+      </div>
 
       {/* Status Tabs */}
       <div className="sticky top-0 z-20 border-b border-[#E5E7EB] bg-white/95 backdrop-blur-sm">
@@ -108,10 +115,11 @@ export default function ApplicationsPage() {
             <button
               key={tab.key}
               onClick={() => { setActiveTab(tab.key); setLoading(true); }}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+              aria-pressed={activeTab === tab.key}
+              className={`inline-flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2 ${
                 activeTab === tab.key
                   ? "bg-[#0F4C81] text-white"
-                  : "bg-[#F8F9FA] text-[#6B7280] hover:bg-[#E5E7EB]"
+                  : "bg-[#F8F9FA] text-[#4B5563] hover:bg-[#E5E7EB]"
               }`}
             >
               {tab.label}
@@ -121,12 +129,12 @@ export default function ApplicationsPage() {
       </div>
 
       {/* Applications List */}
-      <main className="mx-auto max-w-3xl px-4 py-6">
+      <div className="mx-auto max-w-3xl px-4 py-6">
         {apps.length === 0 ? (
           <div className="py-16 text-center">
-            <Briefcase className="mx-auto mb-4 size-12 text-[#6B7280]" />
-            <h2 className="text-lg font-bold text-[#1A1A1A]">Nessuna candidatura</h2>
-            <p className="mt-2 text-sm text-[#6B7280]">
+            <Briefcase className="mx-auto mb-4 size-12 text-[#4B5563]" aria-hidden="true" />
+            <p className="text-lg font-bold text-[#1A1A1A]">Nessuna candidatura</p>
+            <p className="mt-2 text-sm text-[#4B5563]">
               {activeTab
                 ? `Non hai candidature con stato "${STATUS_TABS.find((t) => t.key === activeTab)?.label}"`
                 : "Inizia a candidarti alle opportunità che ti interessano"}
@@ -156,34 +164,34 @@ export default function ApplicationsPage() {
                       {(app.snapshot?.companyName || app.post?.company?.name || "?").charAt(0)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="truncate font-bold text-[#1A1A1A]">
+                      <h2 className="truncate font-bold text-[#1A1A1A]">
                         {app.snapshot?.postTitle || app.post?.title || "Posizione non disponibile"}
-                      </h3>
-                      <div className="flex items-center gap-3 text-xs text-[#6B7280]">
+                      </h2>
+                      <div className="flex items-center gap-3 text-xs text-[#4B5563]">
                         <span>{app.snapshot?.companyName || app.post?.company?.name}</span>
                         {(app.snapshot?.city || app.post?.location?.city) && (
                           <span className="flex items-center gap-1">
-                            <MapPin className="size-3" />
+                            <MapPin className="size-3" aria-hidden="true" />
                             {app.snapshot?.city || app.post?.location?.city}
                           </span>
                         )}
                       </div>
                     </div>
                     <span className={`shrink-0 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${config.color}`}>
-                      <StatusIcon className="size-3" />
+                      <StatusIcon className="size-3" aria-hidden="true" />
                       {config.label}
                     </span>
                   </div>
 
                   {/* Timeline */}
-                  <div className="mt-4 flex items-center gap-2 text-xs text-[#6B7280]">
+                  <div className="mt-4 flex items-center gap-2 text-xs text-[#4B5563]">
                     <span className="flex items-center gap-1">
-                      <Calendar className="size-3" />
+                      <Calendar className="size-3" aria-hidden="true" />
                       Inviata: {formatDate(app.appliedAt || app.createdAt)}
                     </span>
                     {app.reviewedAt && (
                       <>
-                        <ChevronRight className="size-3" />
+                        <ChevronRight className="size-3" aria-hidden="true" />
                         <span>Esaminata: {formatDate(app.reviewedAt)}</span>
                       </>
                     )}
@@ -192,7 +200,7 @@ export default function ApplicationsPage() {
                   {/* Review notes */}
                   {app.reviewNotes && (
                     <div className="mt-3 rounded-md bg-[#F8F9FA] p-3 text-sm text-[#1A1A1A]">
-                      <p className="mb-1 text-xs font-semibold text-[#6B7280]">Note del selezionatore:</p>
+                      <p className="mb-1 text-xs font-semibold text-[#4B5563]">Note del selezionatore:</p>
                       {app.reviewNotes}
                     </div>
                   )}
@@ -201,7 +209,7 @@ export default function ApplicationsPage() {
                   <div className="mt-4 flex flex-wrap gap-2">
                     <button
                       onClick={() => navigate(`/posts/${app.postId}`)}
-                      className="inline-flex items-center gap-1.5 rounded-md border border-[#E5E7EB] bg-white px-3 py-1.5 text-xs font-medium text-[#1A1A1A] hover:bg-[#F8F9FA]"
+                      className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-[#E5E7EB] bg-white px-3 text-xs font-medium text-[#1A1A1A] hover:bg-[#F8F9FA]"
                     >
                       Vedi dettagli
                     </button>
@@ -209,17 +217,24 @@ export default function ApplicationsPage() {
                       <button
                         onClick={() => handleWithdraw(app._id)}
                         disabled={withdrawing === app._id}
-                        className="inline-flex items-center gap-1.5 rounded-md border border-[#DC2626]/30 bg-white px-3 py-1.5 text-xs font-medium text-[#DC2626] hover:bg-[#DC2626]/5 disabled:opacity-50"
+                        className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-[#DC2626]/30 bg-white px-3 text-xs font-medium text-[#B91C1C] hover:bg-[#DC2626]/5 disabled:opacity-50"
                       >
-                        {withdrawing === app._id ? <Loader2 className="size-3 animate-spin" /> : "Ritira"}
+                        {withdrawing === app._id ? (
+                          <>
+                            <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+                            Ritiro…
+                          </>
+                        ) : (
+                          "Ritira"
+                        )}
                       </button>
                     )}
                     {app.status === "accepted" && (
                       <button
                         onClick={() => handleMessage(app)}
-                        className="inline-flex items-center gap-1.5 rounded-md bg-[#0F4C81] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#0a3d6b]"
+                        className="inline-flex min-h-11 items-center gap-1.5 rounded-md bg-[#0F4C81] px-3 text-xs font-semibold text-white hover:bg-[#0a3d6b]"
                       >
-                        <MessageSquare className="size-3" />
+                        <MessageSquare className="size-3" aria-hidden="true" />
                         Messaggia datore
                       </button>
                     )}
@@ -229,7 +244,7 @@ export default function ApplicationsPage() {
             })}
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

@@ -5,6 +5,7 @@ import {
   Briefcase, Calendar, MapPin,
 } from "lucide-react";
 import { api, getErrorMessage, type SafeUser, type Speciality, type WorkHistoryEntry, type UploadedFile } from "@/lib/api";
+import { Seo } from "@/components/Seo";
 
 // ─── Step Indicator ──────────────────────────────────────────────
 const STEPS = [
@@ -33,14 +34,14 @@ function StepIndicator({ current }: { current: number }) {
                   ? "bg-[#16A34A] text-white"
                   : isActive
                     ? "bg-[#0F4C81] text-white"
-                    : "bg-[#E5E7EB] text-[#6B7280]"
+                    : "bg-[#E5E7EB] text-[#4B5563]"
               }`}
             >
               {isDone ? <Check className="size-4" /> : step.id}
             </div>
             <span
               className={`hidden text-sm font-medium sm:block ${
-                isActive ? "text-[#0F4C81]" : "text-[#6B7280]"
+                isActive ? "text-[#0F4C81]" : "text-[#4B5563]"
               }`}
             >
               {step.label}
@@ -90,7 +91,7 @@ function StepSpecialities({
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-xl font-bold text-[#1A1A1A]">Conferma le tue specialità</h2>
-        <p className="mt-1 text-sm text-[#6B7280]">
+        <p className="mt-1 text-sm text-[#4B5563]">
           Seleziona fino a 6 specialità per ricevere le migliori opportunità
         </p>
       </div>
@@ -98,7 +99,7 @@ function StepSpecialities({
       <div className="max-h-[400px] space-y-4 overflow-y-auto rounded-lg border border-[#E5E7EB] p-4">
         {Object.entries(grouped).map(([category, specs]) => (
           <div key={category}>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">
               {category}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -122,16 +123,16 @@ function StepSpecialities({
           </div>
         ))}
         {specialities.length === 0 && (
-          <p className="py-8 text-center text-sm text-[#6B7280]">Caricamento…</p>
+          <p className="py-8 text-center text-sm text-[#4B5563]">Caricamento…</p>
         )}
       </div>
 
       <div className="flex items-center justify-between text-sm">
-        <span className="text-[#6B7280]">{selected.length}/6 selezionate</span>
+        <span className="text-[#4B5563]">{selected.length}/6 selezionate</span>
       </div>
 
       <div className="flex gap-3">
-        <button type="button" onClick={onSkip} className="flex-1 rounded-md border border-[#E5E7EB] bg-white py-2.5 text-sm font-medium text-[#6B7280] transition-colors hover:bg-[#F8F9FA]">
+        <button type="button" onClick={onSkip} className="flex-1 rounded-md border border-[#E5E7EB] bg-white py-2.5 text-sm font-medium text-[#4B5563] transition-colors hover:bg-[#F8F9FA]">
           Salta per ora
         </button>
         <button
@@ -215,7 +216,7 @@ function StepResume({
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-xl font-bold text-[#1A1A1A]">Carica il tuo CV</h2>
-        <p className="mt-1 text-sm text-[#6B7280]">
+        <p className="mt-1 text-sm text-[#4B5563]">
           PDF o DOCX, massimo 10MB
         </p>
       </div>
@@ -242,7 +243,7 @@ function StepResume({
           />
           {uploading ? (
             <div className="w-full max-w-xs space-y-3">
-              <div className="flex items-center justify-between text-xs text-[#6B7280]">
+              <div className="flex items-center justify-between text-xs text-[#4B5563]">
                 <span>Caricamento…</span>
                 <span>{progress}%</span>
               </div>
@@ -255,11 +256,11 @@ function StepResume({
             </div>
           ) : (
             <>
-              <Upload className="mb-3 size-10 text-[#6B7280]" />
+              <Upload className="mb-3 size-10 text-[#4B5563]" />
               <p className="text-sm font-medium text-[#1A1A1A]">
                 Trascina il file qui o clicca per selezionare
               </p>
-              <div className="mt-3 flex gap-3 text-xs text-[#6B7280]">
+              <div className="mt-3 flex gap-3 text-xs text-[#4B5563]">
                 <span className="flex items-center gap-1"><FileText className="size-3" /> PDF</span>
                 <span className="flex items-center gap-1"><FileText className="size-3" /> DOCX</span>
               </div>
@@ -271,18 +272,18 @@ function StepResume({
       {/* Success preview */}
       {uploaded && (
         <div className="flex items-center gap-4 rounded-lg border border-[#16A34A]/30 bg-[#16A34A]/5 p-4">
-          <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-[#16A34A]/10">
-            <FileText className="size-6 text-[#16A34A]" />
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-[#E8F6ED]">
+            <FileText className="size-6 text-[#15803D]" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-[#1A1A1A]">{uploaded.originalName}</p>
-            <p className="text-xs text-[#6B7280]">
+            <p className="text-xs text-[#4B5563]">
               {(uploaded.sizeBytes / 1024).toFixed(0)} KB · Caricato con successo
             </p>
           </div>
           <button
             onClick={() => { setUploaded(null); setFile(null); setProgress(0); }}
-            className="shrink-0 rounded-md p-1.5 text-[#6B7280] hover:bg-[#E5E7EB] hover:text-[#DC2626]"
+            className="shrink-0 rounded-md p-1.5 text-[#4B5563] hover:bg-[#E5E7EB] hover:text-[#B91C1C]"
           >
             <Trash2 className="size-4" />
           </button>
@@ -290,14 +291,14 @@ function StepResume({
       )}
 
       {error && (
-        <div className="rounded-md bg-[#DC2626]/10 px-3 py-2 text-sm text-[#DC2626]" role="alert">
+        <div className="rounded-md bg-[#FCE9E9] px-3 py-2 text-sm text-[#B91C1C]" role="alert">
           {error}
           <button onClick={() => setError(null)} className="ml-2 underline">Riprova</button>
         </div>
       )}
 
       <div className="flex gap-3">
-        <button type="button" onClick={onSkip} className="flex-1 rounded-md border border-[#E5E7EB] bg-white py-2.5 text-sm font-medium text-[#6B7280] transition-colors hover:bg-[#F8F9FA]">
+        <button type="button" onClick={onSkip} className="flex-1 rounded-md border border-[#E5E7EB] bg-white py-2.5 text-sm font-medium text-[#4B5563] transition-colors hover:bg-[#F8F9FA]">
           Aggiungerò dopo
         </button>
         <button
@@ -426,7 +427,7 @@ function StepWorkHistory({
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-xl font-bold text-[#1A1A1A]">La tua esperienza lavorativa</h2>
-        <p className="mt-1 text-sm text-[#6B7280]">
+        <p className="mt-1 text-sm text-[#4B5563]">
           Aggiungi le tue posizioni precedenti (opzionale)
         </p>
       </div>
@@ -454,16 +455,16 @@ function StepWorkHistory({
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <p className="font-semibold text-[#1A1A1A]">{entry.positionTitle}</p>
-                        <p className="text-sm text-[#6B7280]">{entry.companyName}</p>
+                        <p className="text-sm text-[#4B5563]">{entry.companyName}</p>
                       </div>
                       <button
                         onClick={() => remove(entry._id)}
-                        className="shrink-0 rounded p-1 text-[#6B7280] hover:bg-[#DC2626]/10 hover:text-[#DC2626]"
+                        className="shrink-0 rounded p-1 text-[#4B5563] hover:bg-[#FCE9E9] hover:text-[#B91C1C]"
                       >
                         <Trash2 className="size-4" />
                       </button>
                     </div>
-                    <div className="mt-2 flex flex-wrap gap-3 text-xs text-[#6B7280]">
+                    <div className="mt-2 flex flex-wrap gap-3 text-xs text-[#4B5563]">
                       <span className="flex items-center gap-1">
                         <Calendar className="size-3" />
                         {new Date(entry.startDate).toLocaleDateString("it-IT", { month: "short", year: "numeric" })}
@@ -481,12 +482,12 @@ function StepWorkHistory({
                       )}
                     </div>
                     {entry.description && (
-                      <p className="mt-2 text-sm leading-relaxed text-[#6B7280] line-clamp-2">
+                      <p className="mt-2 text-sm leading-relaxed text-[#4B5563] line-clamp-2">
                         {entry.description}
                       </p>
                     )}
                     {entry.isCurrent && (
-                      <span className="mt-2 inline-block rounded-full bg-[#16A34A]/10 px-2 py-0.5 text-xs font-medium text-[#16A34A]">
+                      <span className="mt-2 inline-block rounded-full bg-[#E8F6ED] px-2 py-0.5 text-xs font-medium text-[#15803D]">
                         Posizione attuale
                       </span>
                     )}
@@ -498,8 +499,8 @@ function StepWorkHistory({
 
           {entries.length === 0 && (
             <div className="rounded-lg border border-dashed border-[#E5E7EB] py-12 text-center">
-              <Briefcase className="mx-auto mb-3 size-10 text-[#6B7280]" />
-              <p className="text-sm text-[#6B7280]">Nessuna esperienza aggiunta</p>
+              <Briefcase className="mx-auto mb-3 size-10 text-[#4B5563]" />
+              <p className="text-sm text-[#4B5563]">Nessuna esperienza aggiunta</p>
             </div>
           )}
 
@@ -507,7 +508,7 @@ function StepWorkHistory({
             type="button"
             onClick={openAdd}
             disabled={entries.length >= 30}
-            className="flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-[#0F4C81] bg-[#0F4C81]/5 py-3 text-sm font-medium text-[#0F4C81] transition-colors hover:bg-[#0F4C81]/10 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-[#0F4C81] bg-[#0F4C81]/5 py-3 text-sm font-medium text-[#0F4C81] transition-colors hover:bg-[#E8F0F9] disabled:opacity-50"
           >
             <Plus className="size-4" /> Aggiungi posizione
           </button>
@@ -515,7 +516,7 @@ function StepWorkHistory({
       )}
 
       <div className="flex gap-3">
-        <button type="button" onClick={onSkip} className="flex-1 rounded-md border border-[#E5E7EB] bg-white py-2.5 text-sm font-medium text-[#6B7280] transition-colors hover:bg-[#F8F9FA]">
+        <button type="button" onClick={onSkip} className="flex-1 rounded-md border border-[#E5E7EB] bg-white py-2.5 text-sm font-medium text-[#4B5563] transition-colors hover:bg-[#F8F9FA]">
           Salta
         </button>
         <button type="button" onClick={onComplete} className="auth-btn-primary flex-1">
@@ -530,28 +531,28 @@ function StepWorkHistory({
           <div className="relative w-full max-w-lg animate-in slide-in-from-bottom-4 rounded-t-xl bg-white p-6 shadow-xl sm:rounded-xl sm:slide-in-from-bottom-0">
             <div className="mb-5 flex items-center justify-between">
               <h3 className="text-lg font-bold text-[#1A1A1A]">Nuova posizione</h3>
-              <button onClick={close} className="rounded-md p-1 text-[#6B7280] hover:bg-[#E5E7EB]">
+              <button onClick={close} className="rounded-md p-1 text-[#4B5563] hover:bg-[#E5E7EB]">
                 <X className="size-5" />
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="auth-label">Titolo posizione *</label>
-                <input className="auth-input" value={form.positionTitle} onChange={(e) => setForm({ ...form, positionTitle: e.target.value })} placeholder="es. Muratore Senior" />
+                <label htmlFor="onboard-titolo-posizione" className="auth-label">Titolo posizione *</label>
+                <input id="onboard-titolo-posizione" className="auth-input" value={form.positionTitle} onChange={(e) => setForm({ ...form, positionTitle: e.target.value })} placeholder="es. Muratore Senior" />
               </div>
               <div>
-                <label className="auth-label">Azienda *</label>
-                <input className="auth-input" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} placeholder="es. Edilizia Rossi Srl" />
+                <label htmlFor="onboard-azienda" className="auth-label">Azienda *</label>
+                <input id="onboard-azienda" className="auth-input" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} placeholder="es. Edilizia Rossi Srl" />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="auth-label">Data inizio *</label>
-                  <input type="month" className="auth-input" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value + "-01" })} />
+                  <label htmlFor="onboard-data-inizio" className="auth-label">Data inizio *</label>
+                  <input id="onboard-data-inizio" type="month" className="auth-input" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value + "-01" })} />
                 </div>
                 <div>
-                  <label className="auth-label">Data fine</label>
-                  <input
+                  <label htmlFor="onboard-data-fine" className="auth-label">Data fine</label>
+                  <input id="onboard-data-fine"
                     type="month"
                     className="auth-input"
                     disabled={form.isCurrent}
@@ -570,12 +571,12 @@ function StepWorkHistory({
                 Posizione attuale
               </label>
               <div>
-                <label className="auth-label">Sede</label>
-                <input className="auth-input" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="es. Milano" />
+                <label htmlFor="onboard-sede" className="auth-label">Sede</label>
+                <input id="onboard-sede" className="auth-input" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="es. Milano" />
               </div>
               <div>
-                <label className="auth-label">Descrizione</label>
-                <textarea
+                <label htmlFor="onboard-descrizione" className="auth-label">Descrizione</label>
+                <textarea id="onboard-descrizione"
                   className="auth-input min-h-[80px] resize-none"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -590,7 +591,7 @@ function StepWorkHistory({
                     <button
                       key={s._id}
                       type="button"
-                      className="speciality-chip text-[11px]"
+                      className="speciality-chip text-xs"
                       data-selected={form.specialityIds.includes(s._id)}
                       onClick={() => toggleSpec(s._id)}
                     >
@@ -601,7 +602,7 @@ function StepWorkHistory({
               </div>
 
               {formError && (
-                <div className="rounded-md bg-[#DC2626]/10 px-3 py-2 text-sm text-[#DC2626]" role="alert">
+                <div className="rounded-md bg-[#FCE9E9] px-3 py-2 text-sm text-[#B91C1C]" role="alert">
                   {formError}
                 </div>
               )}
@@ -667,21 +668,26 @@ export default function OnboardingPage() {
 
   if (!user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
-        <Loader2 className="size-8 animate-spin text-[#0F4C81]" />
-      </div>
+      <main className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
+        <Loader2 className="size-8 animate-spin text-[#0F4C81]" aria-label="Caricamento profilo" />
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] px-4 py-8 sm:py-12">
+    <main className="min-h-screen bg-[#F8F9FA] px-4 py-8 sm:py-12">
+      <Seo
+        title="Completa il tuo profilo"
+        description="Seleziona le specialità, carica il CV e aggiungi le tue esperienze."
+        noindex
+      />
       {/* Confetti overlay */}
       {showConfetti && (
         <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center">
           <div className="animate-bounce text-center">
             <div className="text-6xl">🎉</div>
             <p className="mt-4 text-2xl font-bold text-[#0F4C81]">Benvenuto!</p>
-            <p className="text-sm text-[#6B7280]">Reindirizzamento in corso…</p>
+            <p className="text-sm text-[#4B5563]">Reindirizzamento in corso…</p>
           </div>
         </div>
       )}
@@ -689,8 +695,8 @@ export default function OnboardingPage() {
       <div className="mx-auto max-w-[540px]">
         {/* Header */}
         <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-[#0F4C81]">Con noi</h1>
-          <p className="text-sm text-[#6B7280]">Completa il tuo profilo in pochi passi</p>
+          <p className="text-2xl font-bold text-[#0F4C81]">Con noi</p>
+          <h1 className="text-sm text-[#4B5563]">Completa il tuo profilo in pochi passi</h1>
         </div>
 
         <StepIndicator current={step} />
@@ -727,6 +733,6 @@ export default function OnboardingPage() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }

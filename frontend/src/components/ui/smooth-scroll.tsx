@@ -67,9 +67,9 @@ const panels: StoryPanel[] = [
 ];
 
 const toneClasses: Record<PanelTone, string> = {
-  navy: "bg-[#07172f] text-white",
-  light: "bg-white text-[#07172f]",
-  blue: "bg-[#0a84ff] text-white",
+  navy: "bg-[#0F4C81] text-white",
+  light: "bg-white text-[#0F4C81]",
+  blue: "bg-[#0F4C81] text-white",
 };
 
 export const SmoothScroll = forwardRef<HTMLElement, SmoothScrollProps>(
@@ -104,7 +104,7 @@ export const SmoothScroll = forwardRef<HTMLElement, SmoothScrollProps>(
                       aria-hidden="true"
                       className={cn(
                         "mt-1 shrink-0 font-mono text-xs font-semibold uppercase tracking-[0.2em]",
-                        panel.tone === "light" ? "text-[#0a84ff]" : "text-white/70",
+                        panel.tone === "light" ? "text-[#0F4C81]" : "text-white/70",
                       )}
                     >
                       {panel.eyebrow}
@@ -118,7 +118,7 @@ export const SmoothScroll = forwardRef<HTMLElement, SmoothScrollProps>(
                   <p
                     className={cn(
                       "mt-8 max-w-2xl text-lg leading-relaxed sm:text-xl",
-                      panel.tone === "light" ? "text-[#07172f]/65" : "text-white/75",
+                      panel.tone === "light" ? "text-[#0F4C81]/82" : "text-white/75",
                     )}
                   >
                     {panel.description}
@@ -129,14 +129,14 @@ export const SmoothScroll = forwardRef<HTMLElement, SmoothScrollProps>(
                       aria-hidden="true"
                       className={cn(
                         "size-10 shrink-0",
-                        panel.tone === "light" ? "text-[#0a84ff]" : "text-white",
+                        panel.tone === "light" ? "text-[#0F4C81]" : "text-white",
                       )}
                       strokeWidth={1.4}
                     />
                     <p
                       className={cn(
                         "text-sm font-medium italic",
-                        panel.tone === "light" ? "text-[#07172f]/55" : "text-white/60",
+                        panel.tone === "light" ? "text-[#0F4C81]/82" : "text-white/85",
                       )}
                     >
                       {panel.footnote}
@@ -150,7 +150,7 @@ export const SmoothScroll = forwardRef<HTMLElement, SmoothScrollProps>(
                       aria-hidden="true"
                       className={cn(
                         "size-5",
-                        panel.tone === "light" ? "text-[#07172f]/30" : "text-white/30",
+                        panel.tone === "light" ? "text-[#0F4C81]/38" : "text-white/30",
                       )}
                     />
                     <span className="sr-only">Scorri per continuare</span>
@@ -164,8 +164,8 @@ export const SmoothScroll = forwardRef<HTMLElement, SmoothScrollProps>(
                       className={cn(
                         "bluecrest-focus inline-flex h-12 items-center gap-2 rounded-full px-8 text-sm font-semibold uppercase tracking-[0.12em] transition-colors",
                         panel.tone === "light"
-                          ? "bg-[#07172f] text-white hover:bg-[#0a84ff]"
-                          : "bg-white text-[#07172f] hover:bg-white/90",
+                          ? "bg-[#0F4C81] text-white hover:bg-[#0F4C81]"
+                          : "bg-white text-[#0F4C81] hover:bg-white/90",
                       )}
                     >
                       Torna all'inizio

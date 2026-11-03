@@ -1,9 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  Loader2, Search, User, Shield, MapPin, Clock,
-  CheckCircle2, XCircle, Trash2, Edit3, MoreVertical,
+  Loader2, Search, CheckCircle2, XCircle, Trash2, Edit3,
 } from "lucide-react";
 import { api, type SafeUser } from "@/lib/api";
+import AdminShell from "@/components/AdminShell";
+import { Seo } from "@/components/Seo";
+import ConfirmDialog from "@/components/ui/confirm-dialog";
+import { showSuccess, showError } from "@/utils/toast";
 
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<SafeUser[]>([]);
@@ -15,6 +18,7 @@ export default function AdminUsersPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<SafeUser | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<SafeUser | null>(null);
 
   const fetchUsers = useCallback(async (p: number) => {
     setLoading(true);
@@ -28,7 +32,11 @@ export default function AdminUsersPage() {
       setUsers(result.items);
       setTotal(result.total);
       setPage(p);
-    } catch {/* intentionally ignored: background refresh, fallback UI already covers failure */} finally { setLoading(false); }
+    } catch {
+      showError("Non è stato possibile caricare gli utenti");
+    } finally {
+      setLoading(false);
+    }
   }, [search, roleFilter, statusFilter]);
 
   useEffect(() => { fetchUsers(1); }, [fetchUsers]);
@@ -38,67 +46,96 @@ export default function AdminUsersPage() {
     try {
       const newStatus = !(user.isActive ?? true);
       await api.adminUpdateUserStatus(user.id, newStatus);
+      showSuccess(newStatus ? "Utente riattivato" : "Utente disattivato");
       fetchUsers(page);
-    } catch {/* intentionally ignored: background refresh, fallback UI already covers failure */} finally { setActionLoading(null); }
+    } catch {
+      showError("Modifica dello stato non riuscita");
+    } finally {
+      setActionLoading(null);
+    }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Eliminare questo utente? L'azione è irreversibile.")) return;
-    setActionLoading(id);
+  const handleDelete = async (user: SafeUser) => {
+    setActionLoading(user.id);
     try {
-      await api.adminDeleteUser(id);
+      await api.adminDeleteUser(user.id);
+      showSuccess("Utente eliminato");
+      setPendingDelete(null);
       fetchUsers(page);
-    } catch {/* intentionally ignored: background refresh, fallback UI already covers failure */} finally { setActionLoading(null); }
+    } catch {
+      showError("Eliminazione non riuscita");
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   const totalPages = Math.ceil(total / 20);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <header className="border-b border-[#E5E7EB] bg-white px-6 py-5">
-        <h1 className="text-xl font-bold text-[#1A1A1A]">Gestione Utenti</h1>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-6 py-6 space-y-6">
+    <>
+      <Seo title="Gestione utenti — Admin Con noi" description="Gestisci gli account della piattaforma." noindex />
+      <AdminShell title="Gestione utenti" description={`${total} ${total === 1 ? "utente" : "utenti"} in totale`}>
         {/* Filters */}
         <div className="flex flex-wrap items-center gap-3 rounded-lg border border-[#E5E7EB] bg-white p-4">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#6B7280]" />
+          <div className="relative min-w-[200px] flex-1">
+            <label htmlFor="users-search" className="sr-only">Cerca utenti</label>
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#4B5563]" aria-hidden="true" />
             <input
-              type="text"
+              id="users-search"
+              type="search"
               placeholder="Cerca nome, email, città…"
-              className="h-9 w-full rounded-md border border-[#E5E7EB] bg-[#F8F9FA] pl-9 pr-3 text-sm focus:border-[#0F4C81] focus:outline-none"
+              className="field-control field-control--sm bg-[#F8F9FA] pl-9"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <select className="h-9 rounded-md border border-[#E5E7EB] bg-white px-3 text-sm focus:border-[#0F4C81] focus:outline-none" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)}>
-            <option value="">Tutti i ruoli</option>
-            <option value="worker">Worker</option>
-            <option value="admin">Admin</option>
-          </select>
-          <select className="h-9 rounded-md border border-[#E5E7EB] bg-white px-3 text-sm focus:border-[#0F4C81] focus:outline-none" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-            <option value="">Tutti gli stati</option>
-            <option value="active">Attivi</option>
-            <option value="inactive">Disattivati</option>
-          </select>
+          <div>
+            <label htmlFor="users-role" className="sr-only">Filtra per ruolo</label>
+            <select
+              id="users-role"
+              className="field-control field-control--sm w-auto"
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+            >
+              <option value="">Tutti i ruoli</option>
+              <option value="worker">Lavoratore</option>
+              <option value="admin">Amministratore</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="users-status" className="sr-only">Filtra per stato</label>
+            <select
+              id="users-status"
+              className="field-control field-control--sm w-auto"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="">Tutti gli stati</option>
+              <option value="active">Attivi</option>
+              <option value="inactive">Disattivati</option>
+            </select>
+          </div>
         </div>
 
         {/* Table */}
         <div className="overflow-hidden rounded-lg border border-[#E5E7EB] bg-white">
           {loading ? (
-            <div className="flex justify-center py-16"><Loader2 className="size-8 animate-spin text-[#0F4C81]" /></div>
+            <div className="flex justify-center py-16">
+              <h1 className="sr-only">Utenti</h1>
+        <Loader2 className="size-8 animate-spin text-[#0F4C81]" aria-label="Caricamento utenti" />
+            </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-[#F8F9FA] text-xs uppercase text-[#6B7280]">
+            <div tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#0F4C81]">
+              <table className="w-full min-w-[760px] text-left text-sm">
+                <caption className="sr-only">Elenco utenti con ruolo, città, stato e azioni</caption>
+                <thead className="bg-[#F8F9FA] text-xs uppercase text-[#4B5563]">
                   <tr>
-                    <th className="px-6 py-3 font-semibold">Nome</th>
-                    <th className="px-6 py-3 font-semibold">Email</th>
-                    <th className="px-6 py-3 font-semibold">Ruolo</th>
-                    <th className="px-6 py-3 font-semibold">Città</th>
-                    <th className="px-6 py-3 font-semibold">Stato</th>
-                    <th className="px-6 py-3 font-semibold text-right">Azioni</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Nome</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Email</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Ruolo</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Città</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Stato</th>
+                    <th scope="col" className="px-4 py-3 text-right font-semibold">Azioni</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E5E7EB]">
@@ -106,33 +143,61 @@ export default function AdminUsersPage() {
                     const isActive = user.isActive !== false;
                     return (
                       <tr key={user.id} className="hover:bg-[#F8F9FA]">
-                        <td className="px-6 py-3 font-medium text-[#1A1A1A]">{user.fullName}</td>
-                        <td className="px-6 py-3 text-[#6B7280]">{user.email}</td>
-                        <td className="px-6 py-3">
-                          <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                            user.role === "admin" ? "bg-[#7C3AED]/10 text-[#7C3AED]" : "bg-[#0F4C81]/10 text-[#0F4C81]"
-                          }`}>{user.role}</span>
+                        <td className="px-4 py-3 font-medium text-[#1A1A1A]">{user.fullName}</td>
+                        <td className="px-4 py-3 text-[#4B5563]">{user.email}</td>
+                        <td className="px-4 py-3">
+                          <span className={`status-pill ${user.role === "admin" ? "status-pill--info" : "status-pill--neutral"}`}>
+                            {user.role === "admin" ? "Admin" : "Lavoratore"}
+                          </span>
                         </td>
-                        <td className="px-6 py-3 text-[#6B7280]">{user.city || "—"}</td>
-                        <td className="px-6 py-3">
-                          <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                            isActive ? "bg-[#16A34A]/10 text-[#16A34A]" : "bg-[#DC2626]/10 text-[#DC2626]"
-                          }`}>{isActive ? "Attivo" : "Disattivato"}</span>
+                        <td className="px-4 py-3 text-[#4B5563]">{user.city || "—"}</td>
+                        <td className="px-4 py-3">
+                          <span className={`status-pill ${isActive ? "status-pill--success" : "status-pill--danger"}`}>
+                            {isActive ? "Attivo" : "Disattivato"}
+                          </span>
                         </td>
-                        <td className="px-6 py-3 text-right">
+                        <td className="px-4 py-3">
                           <div className="flex items-center justify-end gap-1">
-                            <button onClick={() => setSelectedUser(user)} className="rounded p-1.5 text-[#6B7280] hover:bg-[#E5E7EB] hover:text-[#0F4C81]" title="Dettagli"><Edit3 className="size-4" /></button>
-                            <button onClick={() => handleToggleStatus(user)} disabled={actionLoading === user.id} className={`rounded p-1.5 hover:bg-[#F8F9FA] disabled:opacity-50 ${isActive ? "text-[#DC2626] hover:bg-[#DC2626]/10" : "text-[#16A34A] hover:bg-[#16A34A]/10"}`} title={isActive ? "Disattiva" : "Attiva"}>
-                              {actionLoading === user.id ? <Loader2 className="size-4 animate-spin" /> : isActive ? <XCircle className="size-4" /> : <CheckCircle2 className="size-4" />}
+                            <button
+                              onClick={() => setSelectedUser(user)}
+                              className="icon-action text-[#4B5563] hover:text-[#0F4C81]"
+                              aria-label={`Dettagli di ${user.fullName}`}
+                            >
+                              <Edit3 className="size-4" aria-hidden="true" />
                             </button>
-                            <button onClick={() => handleDelete(user.id)} disabled={actionLoading === user.id} className="rounded p-1.5 text-[#DC2626] hover:bg-[#DC2626]/10 disabled:opacity-50" title="Elimina"><Trash2 className="size-4" /></button>
+                            <button
+                              onClick={() => handleToggleStatus(user)}
+                              disabled={actionLoading === user.id}
+                              className={`icon-action ${isActive ? "text-[#B91C1C] hover:bg-[#FCE9E9]" : "text-[#15803D] hover:bg-[#E8F6ED]"}`}
+                              aria-label={`${isActive ? "Disattiva" : "Riattiva"} ${user.fullName}`}
+                            >
+                              {actionLoading === user.id ? (
+                                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                              ) : isActive ? (
+                                <XCircle className="size-4" aria-hidden="true" />
+                              ) : (
+                                <CheckCircle2 className="size-4" aria-hidden="true" />
+                              )}
+                            </button>
+                            <button
+                              onClick={() => setPendingDelete(user)}
+                              disabled={actionLoading === user.id}
+                              className="icon-action text-[#B91C1C] hover:bg-[#FCE9E9]"
+                              aria-label={`Elimina ${user.fullName}`}
+                            >
+                              <Trash2 className="size-4" aria-hidden="true" />
+                            </button>
                           </div>
                         </td>
                       </tr>
                     );
                   })}
                   {users.length === 0 && (
-                    <tr><td colSpan={6} className="px-6 py-12 text-center text-sm text-[#6B7280]">Nessun utente trovato</td></tr>
+                    <tr>
+                      <td colSpan={6} className="px-6 py-12 text-center text-sm text-[#4B5563]">
+                        Nessun utente trovato
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>
@@ -142,48 +207,101 @@ export default function AdminUsersPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-[#6B7280]">{total} utenti totali</p>
-            <div className="flex gap-2">
-              <button onClick={() => fetchUsers(page - 1)} disabled={page <= 1 || loading} className="rounded-md border border-[#E5E7EB] bg-white px-3 py-1.5 text-sm font-medium hover:bg-[#F8F9FA] disabled:opacity-50">Precedente</button>
-              <span className="flex items-center px-3 text-sm text-[#6B7280]">Pagina {page} di {totalPages}</span>
-              <button onClick={() => fetchUsers(page + 1)} disabled={page >= totalPages || loading} className="rounded-md border border-[#E5E7EB] bg-white px-3 py-1.5 text-sm font-medium hover:bg-[#F8F9FA] disabled:opacity-50">Successiva</button>
+          <nav aria-label="Paginazione utenti" className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-[#4B5563]">{total} utenti totali</p>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => fetchUsers(page - 1)}
+                disabled={page <= 1 || loading}
+                className="min-h-11 rounded-md border border-[#E5E7EB] bg-white px-3 text-sm font-medium transition-colors hover:bg-[#F8F9FA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2 disabled:opacity-50"
+              >
+                Precedente
+              </button>
+              <span className="px-1 text-sm text-[#4B5563]" aria-live="polite">Pagina {page} di {totalPages}</span>
+              <button
+                onClick={() => fetchUsers(page + 1)}
+                disabled={page >= totalPages || loading}
+                className="min-h-11 rounded-md border border-[#E5E7EB] bg-white px-3 text-sm font-medium transition-colors hover:bg-[#F8F9FA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2 disabled:opacity-50"
+              >
+                Successiva
+              </button>
             </div>
-          </div>
+          </nav>
         )}
-      </main>
+      </AdminShell>
 
-      {/* User Detail Drawer */}
+      {/* User detail drawer */}
       {selectedUser && (
-        <div className="fixed inset-0 z-50 flex justify-end">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSelectedUser(null)} />
+        <div className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true" aria-labelledby="user-detail-title">
+          <button
+            type="button"
+            className="absolute inset-0 cursor-default bg-black/40 backdrop-blur-sm"
+            onClick={() => setSelectedUser(null)}
+            aria-label="Chiudi il dettaglio"
+          />
           <div className="relative w-full max-w-md animate-in slide-in-from-right-4 bg-white shadow-xl">
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-[#E5E7EB] px-6 py-4">
-                <h2 className="text-lg font-bold text-[#1A1A1A]">Dettaglio Utente</h2>
-                <button onClick={() => setSelectedUser(null)} className="rounded-md p-1 text-[#6B7280] hover:bg-[#F8F9FA]"><XCircle className="size-5" /></button>
+                <h2 id="user-detail-title" className="text-lg font-bold text-[#1A1A1A]">Dettaglio utente</h2>
+                <button
+                  onClick={() => setSelectedUser(null)}
+                  className="icon-action text-[#4B5563]"
+                  aria-label="Chiudi il dettaglio"
+                  autoFocus
+                >
+                  <XCircle className="size-5" aria-hidden="true" />
+                </button>
               </div>
-              <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+              <div className="flex-1 space-y-6 overflow-y-auto px-6 py-6">
                 <div className="flex items-center gap-4">
-                  <div className="flex size-16 items-center justify-center rounded-full bg-[#0F4C81]/10 text-xl font-bold text-[#0F4C81]">
+                  <div className="flex size-16 items-center justify-center rounded-full bg-[#E8F0F9] text-xl font-bold text-[#0F4C81]" aria-hidden="true">
                     {selectedUser.fullName.charAt(0)}
                   </div>
-                  <div>
-                    <p className="text-lg font-bold text-[#1A1A1A]">{selectedUser.fullName}</p>
-                    <p className="text-sm text-[#6B7280]">{selectedUser.email}</p>
+                  <div className="min-w-0">
+                    <p className="truncate text-lg font-bold text-[#1A1A1A]">{selectedUser.fullName}</p>
+                    <p className="truncate text-sm text-[#4B5563]">{selectedUser.email}</p>
                   </div>
                 </div>
-                <div className="space-y-3 rounded-lg border border-[#E5E7EB] bg-[#F8F9FA] p-4 text-sm">
-                  <div className="flex justify-between"><span className="text-[#6B7280]">Ruolo</span><span className="font-medium text-[#1A1A1A] capitalize">{selectedUser.role}</span></div>
-                  <div className="flex justify-between"><span className="text-[#6B7280]">Città</span><span className="font-medium text-[#1A1A1A]">{selectedUser.city || "—"}</span></div>
-                  <div className="flex justify-between"><span className="text-[#6B7280]">Specialità</span><span className="font-medium text-[#1A1A1A]">{selectedUser.specialityIds?.length || 0}</span></div>
-                  <div className="flex justify-between"><span className="text-[#6B7280]">Onboarding</span><span className={`font-medium ${selectedUser.onboardingCompleted ? "text-[#16A34A]" : "text-[#D97706]"}`}>{selectedUser.onboardingCompleted ? "Completato" : "Incompleto"}</span></div>
-                </div>
+                <dl className="space-y-3 rounded-lg border border-[#E5E7EB] bg-[#F8F9FA] p-4 text-sm">
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-[#4B5563]">Ruolo</dt>
+                    <dd className="font-medium text-[#1A1A1A]">{selectedUser.role === "admin" ? "Amministratore" : "Lavoratore"}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-[#4B5563]">Città</dt>
+                    <dd className="font-medium text-[#1A1A1A]">{selectedUser.city || "—"}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-[#4B5563]">Specialità</dt>
+                    <dd className="font-medium text-[#1A1A1A]">{selectedUser.specialityIds?.length || 0}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt className="text-[#4B5563]">Onboarding</dt>
+                    <dd className={`font-medium ${selectedUser.onboardingCompleted ? "text-[#15803D]" : "text-[#B45309]"}`}>
+                      {selectedUser.onboardingCompleted ? "Completato" : "Incompleto"}
+                    </dd>
+                  </div>
+                </dl>
               </div>
             </div>
           </div>
         </div>
       )}
-    </div>
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Eliminare questo utente?"
+        description={
+          pendingDelete
+            ? `L'account di ${pendingDelete.fullName} (${pendingDelete.email}) verrà eliminato definitivamente insieme ai suoi dati. L'operazione non può essere annullata.`
+            : ""
+        }
+        confirmLabel="Elimina utente"
+        destructive
+        loading={actionLoading !== null}
+        onCancel={() => setPendingDelete(null)}
+        onConfirm={() => pendingDelete && handleDelete(pendingDelete)}
+      />
+    </>
   );
 }

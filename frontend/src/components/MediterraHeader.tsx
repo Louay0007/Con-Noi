@@ -33,7 +33,7 @@ export function MediterraHeader() {
     >
       <div className="bluecrest-container grid min-h-[88px] grid-cols-[1fr_auto_1fr] items-center gap-4 py-2">
         <a
-          href="#top"
+          href="/"
           aria-label="Con noi home"
           className={cn(
             "bluecrest-focus inline-flex w-fit items-center rounded-lg bg-white text-carbon transition-colors duration-500 motion-reduce:duration-0",
@@ -61,7 +61,7 @@ export function MediterraHeader() {
 
         <div className="hidden justify-self-end md:block">
           <a
-            href="#top"
+            href="/auth/signup"
             className={cn(
               "bluecrest-focus inline-flex h-9 items-center gap-1.5 rounded-full px-4 text-[13px] font-semibold tracking-[-0.015em] transition-all duration-300",
               isScrolled

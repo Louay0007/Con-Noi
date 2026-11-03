@@ -4,6 +4,9 @@ import {
   MessageSquare, FileText, Download, ChevronRight, Clock, User,
 } from "lucide-react";
 import { api, fileDownloadUrl, type Application } from "@/lib/api";
+import AdminShell from "@/components/AdminShell";
+import { Seo } from "@/components/Seo";
+import { showError } from "@/utils/toast";
 
 const STATUS_TABS = [
   { key: "", label: "Tutte" },
@@ -14,11 +17,11 @@ const STATUS_TABS = [
 ];
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
-  submitted: { label: "Inviata", color: "bg-[#0F4C81]/10 text-[#0F4C81]" },
-  reviewed: { label: "Esaminata", color: "bg-[#D97706]/10 text-[#D97706]" },
-  accepted: { label: "Accettata", color: "bg-[#16A34A]/10 text-[#16A34A]" },
-  rejected: { label: "Rifiutata", color: "bg-[#DC2626]/10 text-[#DC2626]" },
-  withdrawn: { label: "Ritirata", color: "bg-[#6B7280]/10 text-[#6B7280]" },
+  submitted: { label: "Inviata", color: "status-pill--info" },
+  reviewed: { label: "Esaminata", color: "status-pill--warning" },
+  accepted: { label: "Accettata", color: "status-pill--success" },
+  rejected: { label: "Rifiutata", color: "status-pill--danger" },
+  withdrawn: { label: "Ritirata", color: "status-pill--neutral" },
 };
 
 export default function AdminApplicationsPage() {
@@ -87,12 +90,9 @@ export default function AdminApplicationsPage() {
   const totalPages = Math.ceil(total / 20);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <header className="border-b border-[#E5E7EB] bg-white px-6 py-5">
-        <h1 className="text-xl font-bold text-[#1A1A1A]">Revisione Candidature</h1>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-6 py-6 space-y-6">
+    <>
+      <Seo title="Revisione candidature — Admin Con noi" description="Rivedi e gestisci le candidature ricevute." noindex />
+      <AdminShell title="Revisione candidature" description={`${total} ${total === 1 ? "candidatura" : "candidature"}`}>
         {/* Status Tabs */}
         <div className="flex gap-1 overflow-x-auto scrollbar-hide">
           {STATUS_TABS.map((tab) => (
@@ -100,7 +100,7 @@ export default function AdminApplicationsPage() {
               key={tab.key}
               onClick={() => { setActiveTab(tab.key); setBulkSelected(new Set()); }}
               className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                activeTab === tab.key ? "bg-[#0F4C81] text-white" : "bg-white border border-[#E5E7EB] text-[#6B7280] hover:bg-[#F8F9FA]"
+                activeTab === tab.key ? "bg-[#0F4C81] text-white" : "bg-white border border-[#E5E7EB] text-[#4B5563] hover:bg-[#F8F9FA]"
               }`}
             >{tab.label}</button>
           ))}
@@ -127,7 +127,7 @@ export default function AdminApplicationsPage() {
                 <button onClick={handleBulkAction} disabled={bulkProcessing} className="rounded-md bg-[#0F4C81] px-4 py-1.5 text-xs font-semibold text-white hover:bg-[#0a3d6b] disabled:opacity-50">
                   {bulkProcessing ? <Loader2 className="size-3 animate-spin" /> : "Conferma"}
                 </button>
-                <button onClick={() => { setBulkAction(null); setBulkNotes(""); }} className="text-xs text-[#6B7280] hover:underline">Annulla</button>
+                <button onClick={() => { setBulkAction(null); setBulkNotes(""); }} className="text-xs text-[#4B5563] hover:underline">Annulla</button>
               </div>
             )}
           </div>
@@ -137,7 +137,7 @@ export default function AdminApplicationsPage() {
         {loading ? (
           <div className="flex justify-center py-16"><Loader2 className="size-8 animate-spin text-[#0F4C81]" /></div>
         ) : apps.length === 0 ? (
-          <div className="py-16 text-center"><FileText className="mx-auto mb-4 size-12 text-[#6B7280]" /><p className="text-sm text-[#6B7280]">Nessuna candidatura trovata</p></div>
+          <div className="py-16 text-center"><FileText className="mx-auto mb-4 size-12 text-[#4B5563]" /><p className="text-sm text-[#4B5563]">Nessuna candidatura trovata</p></div>
         ) : (
           <div className="space-y-3">
             {apps.map((app) => {
@@ -146,16 +146,18 @@ export default function AdminApplicationsPage() {
                 <div key={app._id} className="flex items-center gap-4 rounded-lg border border-[#E5E7EB] bg-white p-4 transition-shadow hover:shadow-sm">
                   <input
                     type="checkbox"
+                    id={`select-app-${app._id}`}
                     checked={bulkSelected.has(app._id)}
                     onChange={() => toggleBulkSelect(app._id)}
-                    className="size-4 rounded border-[#E5E7EB] accent-[#0F4C81]"
+                    className="size-5 shrink-0 rounded border-[#E5E7EB] accent-[#0F4C81]"
+                    aria-label={`Seleziona la candidatura per ${app.post?.title || app.snapshot?.postTitle || "posizione"}`}
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="truncate font-semibold text-[#1A1A1A]">{app.post?.title || "Posizione non disponibile"}</h3>
-                      <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold ${config.color}`}>{config.label}</span>
+                      <h2 className="truncate font-semibold text-[#1A1A1A]">{app.post?.title || app.snapshot?.postTitle || "Posizione non disponibile"}</h2>
+                      <span className={`status-pill shrink-0 ${config.color}`}>{config.label}</span>
                     </div>
-                    <div className="mt-1 flex items-center gap-3 text-xs text-[#6B7280]">
+                    <div className="mt-1 flex items-center gap-3 text-xs text-[#4B5563]">
                       <span className="flex items-center gap-1"><User className="size-3" /> Candidato ID: {app.userId.slice(-6)}</span>
                       <span className="flex items-center gap-1"><Clock className="size-3" /> {new Date(app.createdAt).toLocaleDateString("it-IT")}</span>
                     </div>
@@ -176,11 +178,11 @@ export default function AdminApplicationsPage() {
         {totalPages > 1 && (
           <div className="flex items-center justify-center gap-2">
             <button onClick={() => fetchApps(page - 1, activeTab || undefined)} disabled={page <= 1 || loading} className="rounded-md border border-[#E5E7EB] bg-white px-3 py-1.5 text-sm font-medium hover:bg-[#F8F9FA] disabled:opacity-50">Precedente</button>
-            <span className="text-sm text-[#6B7280]">Pagina {page} di {totalPages}</span>
+            <span className="text-sm text-[#4B5563]">Pagina {page} di {totalPages}</span>
             <button onClick={() => fetchApps(page + 1, activeTab || undefined)} disabled={page >= totalPages || loading} className="rounded-md border border-[#E5E7EB] bg-white px-3 py-1.5 text-sm font-medium hover:bg-[#F8F9FA] disabled:opacity-50">Successiva</button>
           </div>
         )}
-      </main>
+      </AdminShell>
 
       {/* Application Detail Slide-over */}
       {selectedApp && (
@@ -190,12 +192,12 @@ export default function AdminApplicationsPage() {
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-[#E5E7EB] px-6 py-4">
                 <h2 className="text-lg font-bold text-[#1A1A1A]">Dettaglio Candidatura</h2>
-                <button onClick={() => setSelectedApp(null)} className="rounded-md p-1 text-[#6B7280] hover:bg-[#F8F9FA]"><XCircle className="size-5" /></button>
+                <button onClick={() => setSelectedApp(null)} className="rounded-md p-1 text-[#4B5563] hover:bg-[#F8F9FA]"><XCircle className="size-5" /></button>
               </div>
               <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
                 {/* Worker Summary */}
                 <section>
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">Candidato</h3>
+                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">Candidato</h3>
                   <div className="rounded-lg border border-[#E5E7EB] bg-[#F8F9FA] p-4">
                     <p className="font-semibold text-[#1A1A1A]">ID: {selectedApp.userId.slice(-8)}</p>
                     <div className="mt-2 flex gap-2">
@@ -211,7 +213,7 @@ export default function AdminApplicationsPage() {
                 {/* Cover Letter */}
                 {selectedApp.coverLetter && (
                   <section>
-                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">Lettera di presentazione</h3>
+                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">Lettera di presentazione</h3>
                     <div className="rounded-lg border border-[#E5E7EB] bg-white p-4 text-sm leading-relaxed text-[#1A1A1A] whitespace-pre-line">{selectedApp.coverLetter}</div>
                   </section>
                 )}
@@ -219,12 +221,12 @@ export default function AdminApplicationsPage() {
                 {/* Attachments */}
                 {selectedApp.attachmentFileIds.length > 0 && (
                   <section>
-                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">Allegati</h3>
+                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">Allegati</h3>
                     <div className="space-y-2">
                       {selectedApp.attachmentFileIds.map((fid) => (
                         <a key={fid} href={fileDownloadUrl(fid)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 rounded-md border border-[#E5E7EB] bg-white p-3 text-sm hover:bg-[#F8F9FA]">
                           <FileText className="size-4 text-[#0F4C81]" /> Allegato
-                          <Download className="ml-auto size-3.5 text-[#6B7280]" />
+                          <Download className="ml-auto size-3.5 text-[#4B5563]" />
                         </a>
                       ))}
                     </div>
@@ -234,7 +236,7 @@ export default function AdminApplicationsPage() {
                 {/* Contact Info */}
                 {selectedApp.contact && (
                   <section>
-                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">Contatti</h3>
+                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">Contatti</h3>
                     <div className="space-y-1 text-sm text-[#1A1A1A]">
                       {selectedApp.contact.phone && <p>📞 {selectedApp.contact.phone}</p>}
                       {selectedApp.contact.email && <p>✉️ {selectedApp.contact.email}</p>}
@@ -245,17 +247,17 @@ export default function AdminApplicationsPage() {
 
                 {/* Timeline */}
                 <section>
-                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">Timeline</h3>
+                  <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">Timeline</h3>
                   <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2 text-[#6B7280]"><Clock className="size-3" /> Inviata: {new Date(selectedApp.createdAt).toLocaleString("it-IT")}</div>
-                    {selectedApp.reviewedAt && <div className="flex items-center gap-2 text-[#6B7280]"><ChevronRight className="size-3" /> Esaminata: {new Date(selectedApp.reviewedAt).toLocaleString("it-IT")}</div>}
+                    <div className="flex items-center gap-2 text-[#4B5563]"><Clock className="size-3" /> Inviata: {new Date(selectedApp.createdAt).toLocaleString("it-IT")}</div>
+                    {selectedApp.reviewedAt && <div className="flex items-center gap-2 text-[#4B5563]"><ChevronRight className="size-3" /> Esaminata: {new Date(selectedApp.reviewedAt).toLocaleString("it-IT")}</div>}
                   </div>
                 </section>
 
                 {/* Review Notes */}
                 {selectedApp.reviewNotes && (
                   <section>
-                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">Note precedenti</h3>
+                    <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">Note precedenti</h3>
                     <div className="rounded-md bg-[#F8F9FA] p-3 text-sm text-[#1A1A1A]">{selectedApp.reviewNotes}</div>
                   </section>
                 )}
@@ -288,6 +290,6 @@ export default function AdminApplicationsPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

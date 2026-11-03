@@ -406,6 +406,6 @@ export const api = {
   },
 
   // Broadcast notification
-  adminBroadcast: (data: { title: string; body: string }) =>
+  adminBroadcast: (data: { title: string; body: string; audience?: "all" | "workers" | "admins" }) =>
     request<{ sent: number }>("/notifications/broadcast", { method: "POST", body: JSON.stringify(data) }),
 };

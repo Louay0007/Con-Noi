@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Loader2, Search, SlidersHorizontal, X, MapPin, Briefcase, Wifi } from "lucide-react";
 import { api, logError, type Post, type Speciality } from "@/lib/api";
 import { JobCard, JobCardSkeleton } from "@/components/JobCard";
+import { Seo } from "@/components/Seo";
 
 const EMPLOYMENT_TYPES = [
   { value: "", label: "Tutti i tipi" },
@@ -116,127 +117,142 @@ export default function BrowsePage() {
   const hasActiveFilters = filters.q || filters.city || filters.employmentType || filters.remote || filters.specialityIds.length > 0;
 
   return (
+    <>
+      <Seo
+        title="Cerca opportunità"
+        description="Filtra per città, settore e disponibilità."
+        noindex
+      />
     <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      {/* Sticky Filter Bar */}
-      <header className="sticky top-0 z-30 border-b border-[#E5E7EB] bg-white/95 backdrop-blur-sm">
-        <div className="mx-auto max-w-4xl px-4 py-3">
-          {/* Search row */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#6B7280]" />
-              <input
-                type="text"
-                placeholder="Cerca posizione, azienda…"
-                className="h-10 w-full rounded-md border border-[#E5E7EB] bg-[#F8F9FA] pl-9 pr-3 text-sm text-[#1A1A1A] placeholder:text-[#6B7280] focus:border-[#0F4C81] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
-                value={filters.q}
-                onChange={(e) => setFilters((p) => ({ ...p, q: e.target.value }))}
-              />
+      {/* Results */}
+      <main className="mx-auto max-w-4xl px-4 py-6">
+        {/* Sticky Filter Bar. It lives inside <main> so its controls stay in a
+            landmark; the negative margins cancel main's padding so it still
+            spans the full width. */}
+        <div className="-mx-4 -mt-6 sticky top-0 z-30 border-b border-[#E5E7EB] bg-white/95 backdrop-blur-sm">
+          <div className="px-4 py-3">
+            {/* Search row */}
+            <div className="flex items-center gap-3">
+              <div className="relative flex-1">
+                <label htmlFor="browse-search" className="sr-only">Cerca posizione o azienda</label>
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#4B5563]" aria-hidden="true" />
+                <input
+                  id="browse-search"
+                  type="search"
+                  placeholder="Cerca posizione, azienda…"
+                  className="h-10 w-full rounded-md border border-[#E5E7EB] bg-[#F8F9FA] pl-9 pr-3 text-sm text-[#1A1A1A] placeholder:text-[#4B5563] focus:border-[#0F4C81] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
+                  value={filters.q}
+                  onChange={(e) => setFilters((p) => ({ ...p, q: e.target.value }))}
+                />
+              </div>
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                aria-expanded={showFilters}
+                aria-controls="browse-filters"
+                className={`flex min-h-11 items-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2 ${
+                  showFilters || hasActiveFilters
+                    ? "border-[#0F4C81] bg-[#F8F9FA] text-[#0F4C81]"
+                    : "border-[#E5E7EB] bg-white text-[#4B5563] hover:bg-[#F8F9FA]"
+                }`}
+              >
+                <SlidersHorizontal className="size-4" aria-hidden="true" />
+                {/* Was hidden below sm, leaving an unnamed icon button at 390px. */}
+                <span>Filtri</span>
+                {hasActiveFilters && <span className="sr-only">(filtri attivi)</span>}
+              </button>
             </div>
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors ${
-                showFilters || hasActiveFilters
-                  ? "border-[#0F4C81] bg-[#0F4C81]/5 text-[#0F4C81]"
-                  : "border-[#E5E7EB] bg-white text-[#6B7280] hover:bg-[#F8F9FA]"
-              }`}
-            >
-              <SlidersHorizontal className="size-4" />
-              <span className="hidden sm:inline">Filtri</span>
-            </button>
-          </div>
 
-          {/* Expanded filters */}
-          {showFilters && (
-            <div className="mt-3 space-y-3 border-t border-[#E5E7EB] pt-3">
-              {/* City */}
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1 block text-xs font-medium text-[#6B7280]">Città</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-[#6B7280]" />
-                    <input
-                      type="text"
-                      placeholder="es. Milano"
-                      className="h-9 w-full rounded-md border border-[#E5E7EB] bg-white pl-9 pr-3 text-sm text-[#1A1A1A] placeholder:text-[#6B7280] focus:border-[#0F4C81] focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
-                      value={filters.city}
-                      onChange={(e) => setFilters((p) => ({ ...p, city: e.target.value }))}
-                    />
+            {/* Expanded filters */}
+            {showFilters && (
+              <div id="browse-filters" className="mt-3 space-y-3 border-t border-[#E5E7EB] pt-3">
+                {/* City */}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="browse-city" className="mb-1 block text-xs font-medium text-[#4B5563]">Città</label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-[#4B5563]" />
+                      <input
+                        id="browse-city"
+                        type="search"
+                        placeholder="es. Milano"
+                        className="h-9 w-full rounded-md border border-[#E5E7EB] bg-white pl-9 pr-3 text-sm text-[#1A1A1A] placeholder:text-[#4B5563] focus:border-[#0F4C81] focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
+                        value={filters.city}
+                        onChange={(e) => setFilters((p) => ({ ...p, city: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="browse-employment" className="mb-1 block text-xs font-medium text-[#4B5563]">Tipo di impiego</label>
+                    <select
+                      id="browse-employment"
+                      className="h-9 w-full rounded-md border border-[#E5E7EB] bg-white px-3 text-sm text-[#1A1A1A] focus:border-[#0F4C81] focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
+                      value={filters.employmentType}
+                      onChange={(e) => setFilters((p) => ({ ...p, employmentType: e.target.value }))}
+                    >
+                      {EMPLOYMENT_TYPES.map((t) => (
+                        <option key={t.value} value={t.value}>{t.label}</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
-                <div>
-                  <label className="mb-1 block text-xs font-medium text-[#6B7280]">Tipo di impiego</label>
+
+                {/* Remote toggle + Sort */}
+                <div className="flex items-center justify-between gap-3">
+                  <label className="flex cursor-pointer items-center gap-2 text-sm text-[#1A1A1A]">
+                    <input
+                      type="checkbox"
+                      checked={filters.remote}
+                      onChange={(e) => setFilters((p) => ({ ...p, remote: e.target.checked }))}
+                      className="size-4 rounded border-[#E5E7EB] accent-[#0F4C81]"
+                    />
+                    <Wifi className="size-3.5 text-[#4B5563]" />
+                    Solo remoto
+                  </label>
                   <select
-                    className="h-9 w-full rounded-md border border-[#E5E7EB] bg-white px-3 text-sm text-[#1A1A1A] focus:border-[#0F4C81] focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
-                    value={filters.employmentType}
-                    onChange={(e) => setFilters((p) => ({ ...p, employmentType: e.target.value }))}
+                    className="h-9 rounded-md border border-[#E5E7EB] bg-white px-3 text-sm text-[#1A1A1A] focus:border-[#0F4C81] focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
+                    value={filters.sort}
+                    onChange={(e) => setFilters((p) => ({ ...p, sort: e.target.value }))}
                   >
-                    {EMPLOYMENT_TYPES.map((t) => (
-                      <option key={t.value} value={t.value}>{t.label}</option>
+                    {SORT_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
                     ))}
                   </select>
                 </div>
-              </div>
 
-              {/* Remote toggle + Sort */}
-              <div className="flex items-center justify-between gap-3">
-                <label className="flex cursor-pointer items-center gap-2 text-sm text-[#1A1A1A]">
-                  <input
-                    type="checkbox"
-                    checked={filters.remote}
-                    onChange={(e) => setFilters((p) => ({ ...p, remote: e.target.checked }))}
-                    className="size-4 rounded border-[#E5E7EB] accent-[#0F4C81]"
-                  />
-                  <Wifi className="size-3.5 text-[#6B7280]" />
-                  Solo remoto
-                </label>
-                <select
-                  className="h-9 rounded-md border border-[#E5E7EB] bg-white px-3 text-sm text-[#1A1A1A] focus:border-[#0F4C81] focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
-                  value={filters.sort}
-                  onChange={(e) => setFilters((p) => ({ ...p, sort: e.target.value }))}
-                >
-                  {SORT_OPTIONS.map((o) => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Specialities chips */}
-              <div>
-                <label className="mb-1.5 block text-xs font-medium text-[#6B7280]">Specialità</label>
-                <div className="flex max-h-24 flex-wrap gap-1.5 overflow-y-auto">
-                  {specialities.map((s) => (
-                    <button
-                      key={s._id}
-                      type="button"
-                      className="speciality-chip text-[11px]"
-                      data-selected={filters.specialityIds.includes(s._id)}
-                      onClick={() => toggleSpeciality(s._id)}
-                    >
-                      {s.name}
-                    </button>
-                  ))}
+                {/* Specialities chips */}
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-[#4B5563]">Specialità</label>
+                  <div className="flex max-h-24 flex-wrap gap-1.5 overflow-y-auto">
+                    {specialities.map((s) => (
+                      <button
+                        key={s._id}
+                        type="button"
+                        className="speciality-chip text-xs"
+                        data-selected={filters.specialityIds.includes(s._id)}
+                        onClick={() => toggleSpeciality(s._id)}
+                      >
+                        {s.name}
+                      </button>
+                    ))}
+                  </div>
                 </div>
+
+                {/* Clear filters */}
+                {hasActiveFilters && (
+                  <button
+                    onClick={clearFilters}
+                    className="flex items-center gap-1 text-xs font-medium text-[#B91C1C] hover:underline"
+                  >
+                    <X className="size-3" aria-hidden="true" /> Rimuovi tutti i filtri
+                  </button>
+                )}
               </div>
-
-              {/* Clear filters */}
-              {hasActiveFilters && (
-                <button
-                  onClick={clearFilters}
-                  className="flex items-center gap-1 text-xs font-medium text-[#DC2626] hover:underline"
-                >
-                  <X className="size-3" /> Rimuovi tutti i filtri
-                </button>
-              )}
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </header>
-
-      {/* Results */}
-      <main className="mx-auto max-w-4xl px-4 py-6">
-        {/* Results count */}
+        <h1 className="sr-only">Cerca opportunità</h1>
         {!loading && (
-          <p className="mb-4 text-sm font-medium text-[#6B7280]">
+          <p className="mb-4 mt-1 text-sm font-medium text-[#4B5563]" aria-live="polite">
             {total} {total === 1 ? "opportunità trovata" : "opportunità trovate"}
           </p>
         )}
@@ -247,8 +263,8 @@ export default function BrowsePage() {
           </div>
         ) : posts.length === 0 ? (
           <div className="py-16 text-center">
-            <Briefcase className="mx-auto mb-4 size-12 text-[#6B7280]" />
-            <p className="text-sm text-[#6B7280]">Nessun risultato con questi filtri.</p>
+            <Briefcase className="mx-auto mb-4 size-12 text-[#4B5563]" />
+            <p className="text-sm text-[#4B5563]">Nessun risultato con questi filtri.</p>
             {hasActiveFilters && (
               <button onClick={clearFilters} className="mt-3 text-sm font-medium text-[#0F4C81] hover:underline">
                 Rimuovi filtri
@@ -277,7 +293,7 @@ export default function BrowsePage() {
             )}
 
             {posts.length >= total && total > 0 && (
-              <p className="py-8 text-center text-xs text-[#6B7280]">
+              <p className="py-8 text-center text-xs text-[#4B5563]">
                 Hai visto tutte le opportunità disponibili
               </p>
             )}
@@ -285,5 +301,6 @@ export default function BrowsePage() {
         )}
       </main>
     </div>
+    </>
   );
 }

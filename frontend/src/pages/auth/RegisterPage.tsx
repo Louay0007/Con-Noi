@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Loader2, Eye, EyeOff, Check } from "lucide-react";
 import { api, type ApiError } from "@/lib/api";
 import { isValidEmail } from "@/lib/auth";
+import { Seo } from "@/components/Seo";
 
 type Speciality = { _id: string; name: string; category: string };
 
@@ -91,11 +92,12 @@ export default function RegisterPage() {
   const strength = password ? getPasswordStrength(password) : null;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
+    <main className="flex min-h-screen items-center justify-center bg-[#F8F9FA] px-4 py-12">
+      <Seo title="Crea il tuo account" description="Registrati su Con noi per candidarti alle offerte di lavoro." noindex />
       <div className="auth-card card-brand-in max-w-[540px]">
         <div className="mb-8 text-center">
           <h1 className="text-2xl font-bold tracking-tight text-[#1A1A1A]">Crea il tuo account</h1>
-          <p className="mt-2 text-sm text-[#6B7280]">Unisciti a migliaia di lavoratori qualificati</p>
+          <p className="mt-2 text-sm text-[#4B5563]">Unisciti a migliaia di lavoratori qualificati</p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate className="space-y-5">
@@ -118,7 +120,7 @@ export default function RegisterPage() {
             <label htmlFor="reg-password" className="auth-label">Password *</label>
             <div className="relative">
               <input id="reg-password" type={showPw ? "text" : "password"} autoComplete="new-password" className={`auth-input pr-10 ${fieldErrors.password ? "border-[#DC2626]" : ""}`} placeholder="Minimo 8 caratteri" value={password} onChange={(e) => setPassword(e.target.value)} />
-              <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1A1A1A]" aria-label={showPw ? "Nascondi" : "Mostra"}>
+              <button type="button" onClick={() => setShowPw(!showPw)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4B5563] hover:text-[#1A1A1A]" aria-label={showPw ? "Nascondi" : "Mostra"}>
                 {showPw ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </button>
             </div>
@@ -129,7 +131,7 @@ export default function RegisterPage() {
                     <div key={level} className="strength-bar" data-active={strength === level || (["weak", "fair", "good", "strong"].indexOf(strength!) > ["weak", "fair", "good", "strong"].indexOf(level))} data-level={level} />
                   ))}
                 </div>
-                <span className="text-xs text-[#6B7280]">{strength && strengthLabels[strength]}</span>
+                <span className="text-xs text-[#4B5563]">{strength && strengthLabels[strength]}</span>
               </div>
             )}
             {fieldErrors.password && <p className="auth-error">{fieldErrors.password}</p>}
@@ -154,14 +156,14 @@ export default function RegisterPage() {
           {/* Specialities */}
           <fieldset>
             <legend className="auth-label flex items-center justify-between">
-              <span>Specialità * <span className="font-normal text-[#6B7280]">(max 6)</span></span>
-              <span className="text-xs text-[#6B7280]">{selectedSpecs.length}/6 selezionate</span>
+              <span>Specialità * <span className="font-normal text-[#4B5563]">(max 6)</span></span>
+              <span className="text-xs text-[#4B5563]">{selectedSpecs.length}/6 selezionate</span>
             </legend>
             {fieldErrors.specialities && <p className="auth-error mb-2">{fieldErrors.specialities}</p>}
             <div className="max-h-48 space-y-3 overflow-y-auto rounded-md border border-[#E5E7EB] p-3">
               {Object.entries(grouped).map(([category, specs]) => (
                 <div key={category}>
-                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-[#6B7280]">{category}</p>
+                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">{category}</p>
                   <div className="flex flex-wrap gap-2">
                     {specs.map((s) => (
                       <button
@@ -179,21 +181,21 @@ export default function RegisterPage() {
                   </div>
                 </div>
               ))}
-              {specialities.length === 0 && <p className="text-sm text-[#6B7280]">Caricamento specialità…</p>}
+              {specialities.length === 0 && <p className="text-sm text-[#4B5563]">Caricamento specialità…</p>}
             </div>
           </fieldset>
 
-          {error && <div className="rounded-md bg-[#DC2626]/10 px-3 py-2 text-sm text-[#DC2626]" role="alert">{error}</div>}
+          {error && <div className="rounded-md bg-[#FCE9E9] px-3 py-2 text-sm text-[#B91C1C]" role="alert">{error}</div>}
 
           <button type="submit" disabled={loading} className="auth-btn-primary">
             {loading ? <Loader2 className="size-4 animate-spin" /> : "Crea Account"}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-[#6B7280]">
+        <p className="mt-6 text-center text-sm text-[#4B5563]">
           Hai già un account? <Link to="/auth/login" className="auth-link">Accedi</Link>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

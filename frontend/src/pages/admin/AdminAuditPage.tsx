@@ -1,9 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
+import { Fragment, useState, useEffect, useCallback } from "react";
 import {
   Loader2, Calendar, Download, ChevronDown,
   ChevronRight, ScrollText,
 } from "lucide-react";
 import { api } from "@/lib/api";
+import AdminShell from "@/components/AdminShell";
+import { Seo } from "@/components/Seo";
+import { showError } from "@/utils/toast";
 
 type AuditEntry = {
   _id: string;
@@ -74,33 +77,45 @@ export default function AdminAuditPage() {
   const totalPages = Math.ceil(total / 30);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <header className="border-b border-[#E5E7EB] bg-white px-6 py-5">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <h1 className="text-xl font-bold text-[#1A1A1A]">Audit Log</h1>
-          <button onClick={handleExportCSV} disabled={entries.length === 0} className="inline-flex items-center gap-1.5 rounded-md border border-[#E5E7EB] bg-white px-4 py-2 text-sm font-medium text-[#1A1A1A] hover:bg-[#F8F9FA] disabled:opacity-50">
-            <Download className="size-4" /> Esporta CSV
+    <>
+      <Seo title="Audit log — Admin Con noi" description="Registro delle azioni amministrative." noindex />
+      <AdminShell
+        title="Audit log"
+        description={`${total} ${total === 1 ? "evento" : "eventi"} registrati`}
+        actions={
+          <button
+            onClick={handleExportCSV}
+            disabled={entries.length === 0}
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-md border border-[#E5E7EB] bg-white px-4 text-sm font-medium text-[#1A1A1A] transition-colors hover:bg-[#F8F9FA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F4C81] focus-visible:ring-offset-2 disabled:opacity-50"
+          >
+            <Download className="size-4" aria-hidden="true" /> Esporta CSV
           </button>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-7xl px-6 py-6 space-y-6">
+        }
+      >
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-[#E5E7EB] bg-white p-4">
-          <div className="flex items-center gap-2">
-            <Calendar className="size-4 text-[#6B7280]" />
-            <input type="date" className="h-9 rounded-md border border-[#E5E7EB] bg-white px-3 text-sm focus:border-[#0F4C81] focus:outline-none" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
-            <span className="text-sm text-[#6B7280]">→</span>
-            <input type="date" className="h-9 rounded-md border border-[#E5E7EB] bg-white px-3 text-sm focus:border-[#0F4C81] focus:outline-none" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+        <div className="flex flex-wrap items-end gap-3 rounded-lg border border-[#E5E7EB] bg-white p-4">
+          <div className="flex items-end gap-2">
+            <div>
+              <label htmlFor="audit-from" className="auth-label text-xs">Dal</label>
+              <input id="audit-from" type="date" className="field-control field-control--sm w-auto" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+            </div>
+            <span className="pb-2.5 text-sm text-[#4B5563]" aria-hidden="true">→</span>
+            <div>
+              <label htmlFor="audit-to" className="auth-label text-xs">Al</label>
+              <input id="audit-to" type="date" className="field-control field-control--sm w-auto" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+            </div>
           </div>
-          <select className="h-9 rounded-md border border-[#E5E7EB] bg-white px-3 text-sm focus:border-[#0F4C81] focus:outline-none" value={actionFilter} onChange={(e) => setActionFilter(e.target.value)}>
-            <option value="">Tutte le azioni</option>
-            <option value="create">Create</option>
-            <option value="update">Update</option>
-            <option value="delete">Delete</option>
-            <option value="status_change">Status Change</option>
-            <option value="login">Login</option>
-          </select>
+          <div>
+            <label htmlFor="audit-action" className="auth-label text-xs">Azione</label>
+            <select id="audit-action" className="field-control field-control--sm w-auto" value={actionFilter} onChange={(e) => setActionFilter(e.target.value)}>
+              <option value="">Tutte le azioni</option>
+              <option value="create">Creazione</option>
+              <option value="update">Modifica</option>
+              <option value="delete">Eliminazione</option>
+              <option value="status_change">Cambio di stato</option>
+              <option value="login">Accesso</option>
+            </select>
+          </div>
         </div>
 
         {/* Table */}
@@ -109,21 +124,22 @@ export default function AdminAuditPage() {
             <div className="flex justify-center py-16"><Loader2 className="size-8 animate-spin text-[#0F4C81]" /></div>
           ) : entries.length === 0 ? (
             <div className="py-16 text-center">
-              <ScrollText className="mx-auto mb-4 size-12 text-[#6B7280]" />
-              <p className="text-sm text-[#6B7280]">Nessun evento audit trovato</p>
+              <ScrollText className="mx-auto mb-4 size-12 text-[#4B5563]" />
+              <p className="text-sm text-[#4B5563]">Nessun evento audit trovato</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-[#F8F9FA] text-xs uppercase text-[#6B7280]">
+            <div tabIndex={0} className="overflow-x-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#0F4C81]">
+              <table className="w-full min-w-[860px] text-left text-sm">
+                <caption className="sr-only">Registro delle azioni amministrative</caption>
+                <thead className="bg-[#F8F9FA] text-xs uppercase text-[#4B5563]">
                   <tr>
-                    <th className="w-8 px-4 py-3"></th>
-                    <th className="px-6 py-3 font-semibold">Timestamp</th>
-                    <th className="px-6 py-3 font-semibold">Attore</th>
-                    <th className="px-6 py-3 font-semibold">Azione</th>
-                    <th className="px-6 py-3 font-semibold">Entità</th>
-                    <th className="px-6 py-3 font-semibold">Entity ID</th>
-                    <th className="px-6 py-3 font-semibold">IP</th>
+                    <th scope="col" className="w-8 px-4 py-3"><span className="sr-only">Dettagli</span></th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Timestamp</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Attore</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Azione</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Entità</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">Entity ID</th>
+                    <th scope="col" className="px-4 py-3 font-semibold">IP</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E5E7EB]">
@@ -131,37 +147,37 @@ export default function AdminAuditPage() {
                     const isExpanded = expandedIds.has(entry._id);
                     const hasDiff = Boolean(entry.before || entry.after);
                     return (
-                      <>
-                        <tr key={entry._id} className={`hover:bg-[#F8F9FA] ${isExpanded ? "bg-[#0F4C81]/[0.02]" : ""}`}>
+                      <Fragment key={entry._id}>
+                        <tr className={`hover:bg-[#F8F9FA] ${isExpanded ? "bg-[#0F4C81]/[0.02]" : ""}`}>
                           <td className="px-4 py-3">
                             {hasDiff && (
-                              <button onClick={() => toggleExpand(entry._id)} className="rounded p-1 text-[#6B7280] hover:bg-[#E5E7EB]" aria-label="Mostra dettagli">
+                              <button onClick={() => toggleExpand(entry._id)} className="rounded p-1 text-[#4B5563] hover:bg-[#E5E7EB]" aria-label={isExpanded ? "Nascondi dettagli" : "Mostra dettagli"} aria-expanded={isExpanded}>
                                 {isExpanded ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}
                               </button>
                             )}
                           </td>
-                          <td className="whitespace-nowrap px-6 py-3 text-[#6B7280]">{new Date(entry.timestamp).toLocaleString("it-IT")}</td>
-                          <td className="px-6 py-3 font-medium text-[#1A1A1A]">{entry.actor}</td>
-                          <td className="px-6 py-3">
-                            <span className="inline-block rounded-full bg-[#0F4C81]/10 px-2 py-0.5 text-[10px] font-bold uppercase text-[#0F4C81]">{entry.action}</span>
+                          <td className="whitespace-nowrap px-4 py-3 text-[#4B5563]">{new Date(entry.timestamp).toLocaleString("it-IT")}</td>
+                          <td className="px-4 py-3 font-medium text-[#1A1A1A]">{entry.actor}</td>
+                          <td className="px-4 py-3">
+                            <span className="status-pill status-pill--info uppercase">{entry.action}</span>
                           </td>
-                          <td className="px-6 py-3 text-[#6B7280] capitalize">{entry.entity}</td>
-                          <td className="max-w-[120px] truncate px-6 py-3 font-mono text-xs text-[#6B7280]">{entry.entityId}</td>
-                          <td className="px-6 py-3 font-mono text-xs text-[#6B7280]">{entry.ip || "—"}</td>
+                          <td className="px-4 py-3 text-[#4B5563] capitalize">{entry.entity}</td>
+                          <td className="max-w-[120px] truncate px-4 py-3 font-mono text-xs text-[#4B5563]">{entry.entityId}</td>
+                          <td className="px-4 py-3 font-mono text-xs text-[#4B5563]">{entry.ip || "—"}</td>
                         </tr>
                         {isExpanded && hasDiff && (
-                          <tr key={`${entry._id}-diff`}>
+                          <tr>
                             <td colSpan={7} className="bg-[#F8F9FA] px-6 py-4">
                               <div className="grid gap-4 md:grid-cols-2">
                                 {entry.before && (
                                   <div>
-                                    <p className="mb-2 text-xs font-semibold uppercase text-[#DC2626]">Before</p>
+                                    <p className="mb-2 text-xs font-semibold uppercase text-[#B91C1C]">Prima</p>
                                     <pre className="max-h-48 overflow-auto rounded-md border border-[#E5E7EB] bg-white p-3 text-xs text-[#1A1A1A]">{JSON.stringify(entry.before, null, 2)}</pre>
                                   </div>
                                 )}
                                 {entry.after && (
                                   <div>
-                                    <p className="mb-2 text-xs font-semibold uppercase text-[#16A34A]">After</p>
+                                    <p className="mb-2 text-xs font-semibold uppercase text-[#15803D]">Dopo</p>
                                     <pre className="max-h-48 overflow-auto rounded-md border border-[#E5E7EB] bg-white p-3 text-xs text-[#1A1A1A]">{JSON.stringify(entry.after, null, 2)}</pre>
                                   </div>
                                 )}
@@ -169,7 +185,7 @@ export default function AdminAuditPage() {
                             </td>
                           </tr>
                         )}
-                      </>
+                      </Fragment>
                     );
                   })}
                 </tbody>
@@ -181,15 +197,15 @@ export default function AdminAuditPage() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex items-center justify-between">
-            <p className="text-sm text-[#6B7280]">{total} eventi totali</p>
+            <p className="text-sm text-[#4B5563]">{total} eventi totali</p>
             <div className="flex gap-2">
               <button onClick={() => fetchAudit(page - 1)} disabled={page <= 1 || loading} className="rounded-md border border-[#E5E7EB] bg-white px-3 py-1.5 text-sm font-medium hover:bg-[#F8F9FA] disabled:opacity-50">Precedente</button>
-              <span className="flex items-center px-3 text-sm text-[#6B7280]">Pagina {page} di {totalPages}</span>
+              <span className="flex items-center px-3 text-sm text-[#4B5563]">Pagina {page} di {totalPages}</span>
               <button onClick={() => fetchAudit(page + 1)} disabled={page >= totalPages || loading} className="rounded-md border border-[#E5E7EB] bg-white px-3 py-1.5 text-sm font-medium hover:bg-[#F8F9FA] disabled:opacity-50">Successiva</button>
             </div>
           </div>
         )}
-      </main>
-    </div>
+      </AdminShell>
+    </>
   );
 }

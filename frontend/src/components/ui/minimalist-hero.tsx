@@ -1,5 +1,4 @@
 import { useRef, type ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { type LucideIcon } from "lucide-react";
@@ -13,7 +12,11 @@ export interface MinimalistHeroProps {
   readMoreLabel: string;
   readMoreLink: string;
   onCtaClick?: () => void;
-  imageSrc: string;
+  /**
+   * Path prefix for the responsive hero variants, without size or extension:
+   * a value of "/images/hero/hero" resolves to e.g. "/images/hero/hero-960.avif".
+   */
+  imageBasePath: string;
   imageAlt: string;
   overlayText: {
     part1: string;
@@ -24,15 +27,13 @@ export interface MinimalistHeroProps {
   className?: string;
 }
 
-const easing = [0.22, 1, 0.36, 1] as const;
-
 export function MinimalistHero({
   logo,
   mainText,
   readMoreLabel,
   readMoreLink,
   onCtaClick,
-  imageSrc,
+  imageBasePath,
   imageAlt,
   overlayText,
   footerLinks,
@@ -44,8 +45,12 @@ export function MinimalistHero({
   const heroImage = useRef<HTMLImageElement>(null);
   const heroImageFade = useRef<HTMLDivElement>(null);
   const heroCopy = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-  const initial = reduceMotion ? false : undefined;
+  // Entry animations are CSS keyframes (see `.hero-enter*` in globals.css) so the
+  // landing route no longer ships a motion runtime. The delay is applied by the
+  // per-element animation-delay classes below.
+  const reduceMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   useGSAP(() => {
     const circle = heroCircle.current;
@@ -54,6 +59,8 @@ export function MinimalistHero({
     const copy = heroCopy.current;
     const headlineLines = gsap.utils.toArray<HTMLElement>("[data-hero-line]", hero.current);
     if (!circle || !image || !imageFade || !copy || headlineLines.length === 0) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const travelDistance = Math.max(360, Math.min(window.innerHeight * 0.72, 680));
     const animatedElements = [circle, image, imageFade, copy, ...headlineLines];
@@ -105,11 +112,14 @@ export function MinimalistHero({
         { autoAlpha: 1, y: 0, duration: 0.55, ease: "power2.out" },
         "-=0.18",
       )
+      // Slide only, no autoAlpha: each line sits inside an overflow-hidden mask, so
+      // yPercent alone already reveals it. autoAlpha would set visibility:hidden,
+      // which drops the text out of the accessibility tree (and makes the <h1> an
+      // empty heading) for the whole first second of the timeline.
       .fromTo(
         headlineLines,
-        { autoAlpha: 0, yPercent: 125, rotate: 5 },
+        { yPercent: 125, rotate: 5 },
         {
-          autoAlpha: 1,
           yPercent: 0,
           rotate: 0,
           duration: 1,
@@ -140,39 +150,30 @@ export function MinimalistHero({
       aria-labelledby="mediterra-hero-heading"
     >
       <header className="relative z-40 mx-auto flex w-full max-w-[1440px] items-center justify-between gap-3">
-        <motion.a
+        <a
           href="#top"
-          initial={initial ?? { opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, ease: easing }}
-          className="bluecrest-focus rounded-md text-[20px] font-bold tracking-[-0.045em] text-carbon sm:text-[22px]"
+          className={`hero-enter ${reduceMotion ? "" : "hero-enter--left"} bluecrest-focus rounded-md text-[20px] font-bold tracking-[-0.045em] text-carbon sm:text-[22px]`}
           aria-label="Con noi, torna alla home"
         >
           {logo}
-        </motion.a>
+        </a>
 
         <div className="flex items-center gap-3">
           {onCtaClick ? (
-            <motion.button
+            <button
               type="button"
               onClick={onCtaClick}
-              initial={initial ?? { opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: easing }}
-              className="bluecrest-focus inline-flex min-h-11 items-center justify-center rounded-full bg-[#07172f] px-5 text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-[#0a2d5c]"
+              className={`hero-enter ${reduceMotion ? "" : "hero-enter--right"} bluecrest-focus inline-flex min-h-11 items-center justify-center rounded-full bg-[#0F4C81] px-5 text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-[#0a2d5c]`}
             >
               {readMoreLabel}
-            </motion.button>
+            </button>
           ) : (
-            <motion.a
+            <a
               href={readMoreLink}
-              initial={initial ?? { opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: easing }}
-              className="bluecrest-focus inline-flex min-h-11 items-center justify-center rounded-full bg-[#07172f] px-5 text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-[#0a2d5c]"
+              className={`hero-enter ${reduceMotion ? "" : "hero-enter--right"} bluecrest-focus inline-flex min-h-11 items-center justify-center rounded-full bg-[#0F4C81] px-5 text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-[#0a2d5c]`}
             >
               {readMoreLabel}
-            </motion.a>
+            </a>
           )}
         </div>
       </header>
@@ -211,15 +212,31 @@ export function MinimalistHero({
             className="invisible absolute z-0 h-[285px] w-[285px] rounded-full bg-signal-blue opacity-0 sm:h-[370px] sm:w-[370px] md:h-[min(37vw,530px)] md:w-[min(37vw,530px)]"
             aria-hidden="true"
           />
-          <img
-            ref={heroImage}
-            src={imageSrc}
-            alt={imageAlt}
-            width={1536}
-            height={2304}
-            fetchPriority="high"
-            className="invisible relative z-10 h-[390px] w-auto max-w-none object-contain opacity-0 max-md:[mask-image:linear-gradient(to_bottom,#000_65%,transparent_90%)] sm:h-[490px] md:h-[min(78vh,830px)]"
-          />
+          {/* The hero is a transparent cutout, so AVIF/WebP keep the alpha while
+              cutting the payload from 5.2MB to ~88KB at the size actually used.
+              `fetchPriority` stays high because this is the LCP element. */}
+          <picture>
+            <source
+              type="image/avif"
+              srcSet={`${imageBasePath}-640.avif 640w, ${imageBasePath}-960.avif 960w, ${imageBasePath}-1280.avif 1280w`}
+              sizes="(max-width: 640px) 390px, (max-width: 1024px) 490px, min(78vh, 830px)"
+            />
+            <source
+              type="image/webp"
+              srcSet={`${imageBasePath}-640.webp 640w, ${imageBasePath}-960.webp 960w, ${imageBasePath}-1280.webp 1280w`}
+              sizes="(max-width: 640px) 390px, (max-width: 1024px) 490px, min(78vh, 830px)"
+            />
+            <img
+              ref={heroImage}
+              src={`${imageBasePath}-960.png`}
+              alt={imageAlt}
+              width={640}
+              height={960}
+              fetchPriority="high"
+              decoding="async"
+              className="invisible relative z-10 h-[390px] w-auto max-w-none object-contain opacity-0 max-md:[mask-image:linear-gradient(to_bottom,#000_65%,transparent_90%)] sm:h-[490px] md:h-[min(78vh,830px)]"
+            />
+          </picture>
           <div
             ref={heroImageFade}
             data-hero-image-fade
@@ -233,11 +250,15 @@ export function MinimalistHero({
             id="mediterra-hero-heading"
             className="text-balance text-[54px] font-extrabold leading-[0.84] tracking-[-0.075em] text-carbon sm:text-[70px] md:text-[clamp(68px,7.1vw,116px)]"
           >
+            {/* The copy is visible by default and GSAP only layers the entrance on
+                top. It used to start at `invisible opacity-0` and rely entirely on
+                the timeline, so the <h1> was empty for assistive tech and stayed
+                blank if the animation never ran. */}
             <span className="-my-[0.08em] block overflow-hidden py-[0.08em]">
-              <span data-hero-line className="invisible block opacity-0">{overlayText.part1}</span>
+              <span data-hero-line className="block">{overlayText.part1}</span>
             </span>
             <span className="-my-[0.08em] block overflow-hidden py-[0.08em]">
-              <span data-hero-line className="invisible block opacity-0">{overlayText.part2}</span>
+              <span data-hero-line className="block">{overlayText.part2}</span>
             </span>
           </h1>
         </div>
@@ -246,28 +267,22 @@ export function MinimalistHero({
       <footer className="relative z-30 mx-auto flex w-full max-w-[1440px] items-end justify-between gap-5">
         <nav className="flex items-center gap-1" aria-label="Footer links">
           {footerLinks.map(({ label, icon: Icon, href }) => (
-            <motion.a
+            <a
               key={label}
               href={href}
-              initial={initial ?? { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.1, ease: easing }}
-              className="bluecrest-focus inline-flex h-11 w-11 items-center justify-center rounded-full text-carbon/60 transition-colors hover:bg-frost hover:text-signal-blue"
+              className={`hero-enter ${reduceMotion ? "" : "hero-enter--up hero-enter--delay-1"} bluecrest-focus inline-flex h-11 w-11 items-center justify-center rounded-full text-carbon/60 transition-colors hover:bg-frost hover:text-signal-blue`}
               aria-label={label}
               title={label}
             >
               <Icon aria-hidden="true" className="h-4 w-4" />
-            </motion.a>
+            </a>
           ))}
         </nav>
-        <motion.p
-          initial={initial ?? { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1.3, ease: easing }}
-          className="pb-2 text-right text-[12px] font-semibold tracking-[0.04em] text-carbon/60 sm:text-[13px]"
+        <p
+          className={`hero-enter ${reduceMotion ? "" : "hero-enter--up hero-enter--delay-2"} pb-2 text-right text-[12px] font-semibold tracking-[0.04em] text-carbon/60 sm:text-[13px]`}
         >
           {locationText}
-        </motion.p>
+        </p>
       </footer>
     </section>
   );

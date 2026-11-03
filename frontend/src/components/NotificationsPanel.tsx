@@ -18,9 +18,9 @@ type Notification = {
 
 const TYPE_CONFIG: Record<string, { icon: typeof Bell; color: string; route?: string }> = {
   application_status: { icon: Briefcase, color: "text-[#0F4C81]", route: "/applications" },
-  new_message: { icon: MessageSquare, color: "text-[#E67E22]", route: "/messages" },
-  matching_post: { icon: Star, color: "text-[#16A34A]", route: "/for-you" },
-  admin_broadcast: { icon: Megaphone, color: "text-[#DC2626]" },
+  new_message: { icon: MessageSquare, color: "text-[#B45309]", route: "/messages" },
+  matching_post: { icon: Star, color: "text-[#15803D]", route: "/for-you" },
+  admin_broadcast: { icon: Megaphone, color: "text-[#B91C1C]" },
 };
 
 function groupByDate(notifications: Notification[]) {
@@ -110,7 +110,7 @@ export function NotificationsPanel({ onClose }: { onClose: () => void }) {
           <Bell className="size-4 text-[#0F4C81]" />
           <h3 className="text-sm font-bold text-[#1A1A1A]">Notifiche</h3>
           {unreadCount > 0 && (
-            <span className="flex size-5 items-center justify-center rounded-full bg-[#0F4C81] text-[10px] font-bold text-white">
+            <span className="flex size-5 items-center justify-center rounded-full bg-[#0F4C81] text-xs font-bold text-white">
               {unreadCount}
             </span>
           )}
@@ -125,7 +125,7 @@ export function NotificationsPanel({ onClose }: { onClose: () => void }) {
               {markingAll ? <Loader2 className="size-3 animate-spin" /> : "Segna tutte lette"}
             </button>
           )}
-          <button onClick={onClose} className="rounded-md p-1 text-[#6B7280] hover:bg-[#F8F9FA]">
+          <button onClick={onClose} className="rounded-md p-1 text-[#4B5563] hover:bg-[#F8F9FA]">
             <X className="size-4" />
           </button>
         </div>
@@ -140,13 +140,13 @@ export function NotificationsPanel({ onClose }: { onClose: () => void }) {
         ) : notifications.length === 0 ? (
           <div className="py-12 text-center">
             <Bell className="mx-auto mb-3 size-10 text-[#E5E7EB]" />
-            <p className="text-sm font-medium text-[#6B7280]">Nessuna notifica</p>
-            <p className="mt-1 text-xs text-[#6B7280]">Sei aggiornato!</p>
+            <p className="text-sm font-medium text-[#4B5563]">Nessuna notifica</p>
+            <p className="mt-1 text-xs text-[#4B5563]">Sei aggiornato!</p>
           </div>
         ) : (
           grouped.map((group) => (
             <div key={group.label}>
-              <div className="sticky top-0 bg-[#F8F9FA] px-4 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-[#6B7280]">
+              <div className="sticky top-0 bg-[#F8F9FA] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#4B5563]">
                 {group.label}
               </div>
               {group.items.map((n) => {
@@ -172,8 +172,8 @@ export function NotificationsPanel({ onClose }: { onClose: () => void }) {
                           <span className="mt-1 size-2 shrink-0 rounded-full bg-[#0F4C81]" />
                         )}
                       </div>
-                      <p className="mt-0.5 line-clamp-2 text-xs text-[#6B7280]">{n.body}</p>
-                      <p className="mt-1 text-[10px] text-[#6B7280]">{formatTime(n.createdAt)}</p>
+                      <p className="mt-0.5 line-clamp-2 text-xs text-[#4B5563]">{n.body}</p>
+                      <p className="mt-1 text-xs text-[#4B5563]">{formatTime(n.createdAt)}</p>
                     </div>
                   </button>
                 );
@@ -202,13 +202,13 @@ export function NotificationBell() {
       <button
         onClick={() => setOpen(!open)}
         className={`relative rounded-md p-2 transition-colors ${
-          open ? "bg-[#0F4C81]/10 text-[#0F4C81]" : "text-[#6B7280] hover:bg-[#F8F9FA] hover:text-[#1A1A1A]"
+          open ? "bg-[#E8F0F9] text-[#0F4C81]" : "text-[#4B5563] hover:bg-[#F8F9FA] hover:text-[#1A1A1A]"
         }`}
         aria-label="Notifiche"
       >
         <Bell className="size-5" />
         {unreadCount > 0 && (
-          <span className="absolute right-1 top-1 flex size-4 items-center justify-center rounded-full bg-[#DC2626] text-[9px] font-bold text-white">
+          <span className="absolute right-1 top-1 flex size-4 items-center justify-center rounded-full bg-[#DC2626] text-xs font-bold text-white">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}

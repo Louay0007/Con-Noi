@@ -5,6 +5,7 @@ import {
   XCircle, Check, CheckCheck, MessageSquare, Plus, Search,
 } from "lucide-react";
 import { api, fileDownloadUrl, type SafeUser } from "@/lib/api";
+import { Seo } from "@/components/Seo";
 
 type Thread = {
   _id: string;
@@ -152,72 +153,85 @@ export default function MessagesPage() {
 
   if (loadingThreads) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
-        <Loader2 className="size-8 animate-spin text-[#0F4C81]" />
-      </div>
+      <main className="flex min-h-screen items-center justify-center bg-[#F8F9FA]">
+        <Loader2 className="size-8 animate-spin text-[#0F4C81]" aria-label="Caricamento messaggi" />
+      </main>
     );
   }
 
   return (
-    <div className="flex h-[calc(100vh-64px)] bg-[#F8F9FA]">
-      {/* Thread List (left panel / main on mobile) */}
-      <aside className={`flex w-full flex-col border-r border-[#E5E7EB] bg-white md:w-[340px] md:flex ${showMobileChat ? "hidden" : "flex"}`}>
+    <main className="flex h-[calc(100dvh-3.5rem)] bg-[#F8F9FA]">
+      <h1 className="sr-only">Messaggi</h1>
+      <Seo title="Messaggi" description="Le tue conversazioni con i datori di lavoro." noindex />
+      {/* Thread List (left panel / full width on mobile) */}
+      <section
+        aria-label="Conversazioni"
+        className={`flex w-full flex-col border-r border-[#E5E7EB] bg-white md:flex md:w-[340px] ${showMobileChat ? "hidden" : "flex"}`}
+      >
         <div className="border-b border-[#E5E7EB] px-4 py-4">
-          <h1 className="text-lg font-bold text-[#1A1A1A]">Messaggi</h1>
+          <p className="text-lg font-bold text-[#1A1A1A]">Messaggi</p>
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <ul className="flex-1 overflow-y-auto">
           {threads.length === 0 ? (
             <div className="px-6 py-16 text-center">
-              <MessageSquare className="mx-auto mb-3 size-10 text-[#6B7280]" />
-              <p className="text-sm text-[#6B7280]">Nessuna conversazione</p>
+              <MessageSquare className="mx-auto mb-3 size-10 text-[#4B5563]" />
+              <p className="text-sm text-[#4B5563]">Nessuna conversazione</p>
             </div>
           ) : (
             threads.map((thread) => {
               const other = otherParticipant(thread);
               const isActive = thread._id === activeThreadId;
               return (
+                <li key={thread._id}>
                 <button
-                  key={thread._id}
+                  aria-current={isActive ? "true" : undefined}
                   onClick={() => { setActiveThreadId(thread._id); setShowMobileChat(true); }}
-                  className={`flex w-full items-start gap-3 border-b border-[#E5E7EB] px-4 py-3 text-left transition-colors ${
+                  className={`flex min-h-11 w-full items-start gap-3 border-b border-[#E5E7EB] px-4 py-3 text-left transition-colors ${
                     isActive ? "bg-[#0F4C81]/5" : "hover:bg-[#F8F9FA]"
                   } ${thread.isClosed ? "opacity-50" : ""}`}
                 >
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#0F4C81]/10 text-sm font-bold text-[#0F4C81]">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#E8F0F9] text-sm font-bold text-[#0F4C81]">
                     {other?.fullName?.charAt(0) || "?"}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
                       <span className="truncate text-sm font-semibold text-[#1A1A1A]">{other?.fullName}</span>
-                      <span className="shrink-0 text-[10px] text-[#6B7280]">
+                      <span className="shrink-0 text-xs text-[#4B5563]">
                         {thread.lastMessage ? formatTime(thread.lastMessage.createdAt) : ""}
                       </span>
                     </div>
-                    <p className="mt-0.5 truncate text-xs text-[#6B7280]">
+                    <p className="mt-0.5 truncate text-xs text-[#4B5563]">
                       {thread.lastMessage?.body || "Nessun messaggio"}
                     </p>
                     <div className="mt-1 flex items-center gap-2">
                       {thread.context && (
-                        <span className="rounded bg-[#F8F9FA] px-1.5 py-0.5 text-[10px] font-medium text-[#6B7280]">
+                        <span className="rounded bg-[#F8F9FA] px-1.5 py-0.5 text-xs font-medium text-[#4B5563]">
                           {CONTEXT_LABELS[thread.context] || thread.context}
                         </span>
                       )}
                       {thread.unreadCount > 0 && (
-                        <span className="flex size-4 items-center justify-center rounded-full bg-[#0F4C81] text-[9px] font-bold text-white">
+                        <span
+                          className="flex min-w-5 items-center justify-center rounded-full bg-[#0F4C81] px-1 text-xs font-bold leading-5 text-white"
+                          aria-label={`${thread.unreadCount} messaggi non letti`}
+                        >
                           {thread.unreadCount}
                         </span>
                       )}
                     </div>
                   </div>
                 </button>
+                </li>
               );
             })
           )}
-        </div>
-      </aside>
+        </ul>
+      </section>
 
       {/* Conversation View (right panel / drill-down on mobile) */}
-      <main className={`flex flex-1 flex-col bg-white ${showMobileChat ? "flex" : "hidden md:flex"}`}>
+      <section
+        aria-label="Conversazione"
+        className={`flex-1 flex-col bg-white ${showMobileChat ? "flex" : "hidden md:flex"}`}
+      >
         {activeThreadId ? (
           <>
             {/* Header */}
@@ -225,26 +239,27 @@ export default function MessagesPage() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setShowMobileChat(false)}
-                  className="rounded-md p-1 text-[#6B7280] hover:bg-[#F8F9FA] md:hidden"
+                  className="icon-action -ml-1 text-[#4B5563] md:hidden"
+                  aria-label="Torna all'elenco delle conversazioni"
                 >
-                  <ChevronLeft className="size-5" />
+                  <ChevronLeft className="size-5" aria-hidden="true" />
                 </button>
                 <div>
                   <p className="text-sm font-bold text-[#1A1A1A]">
                     {otherParticipant(threads.find((t) => t._id === activeThreadId)!)?.fullName}
                   </p>
-                  <p className="text-xs text-[#6B7280]">
-                    {threads.find((t) => t._id === activeThreadId)?.isClosed ? "Conversazione chiusa" : "Online"}
+                  <p className="text-xs text-[#4B5563]">
+                    {threads.find((t) => t._id === activeThreadId)?.isClosed ? "Conversazione chiusa" : "Conversazione aperta"}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={handleCloseThread}
-                  className="rounded-md p-2 text-[#6B7280] hover:bg-[#DC2626]/10 hover:text-[#DC2626]"
-                  title="Chiudi conversazione"
+                  className="icon-action text-[#4B5563] hover:bg-[#FCE9E9] hover:text-[#B91C1C]"
+                  aria-label="Chiudi conversazione"
                 >
-                  <XCircle className="size-4" />
+                  <XCircle className="size-5" aria-hidden="true" />
                 </button>
               </div>
             </header>
@@ -298,7 +313,7 @@ export default function MessagesPage() {
                               ))}
                             </div>
                           )}
-                          <div className={`mt-1 flex items-center justify-end gap-1 text-[10px] ${isMine ? "text-white/70" : "text-[#6B7280]"}`}>
+                          <div className={`mt-1 flex items-center justify-end gap-1 text-xs ${isMine ? "text-white/70" : "text-[#4B5563]"}`}>
                             {new Date(msg.createdAt).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" })}
                             {isMine && (
                               isRead ? <CheckCheck className="size-3" /> : <Check className="size-3" />
@@ -324,17 +339,18 @@ export default function MessagesPage() {
                     onKeyDown={handleKeyDown}
                     placeholder="Scrivi un messaggio…"
                     rows={1}
-                    className="max-h-32 min-h-[40px] flex-1 resize-none rounded-lg border border-[#E5E7EB] bg-[#F8F9FA] px-3 py-2 text-sm text-[#1A1A1A] placeholder:text-[#6B7280] focus:border-[#0F4C81] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
+                    className="max-h-32 min-h-[40px] flex-1 resize-none rounded-lg border border-[#E5E7EB] bg-[#F8F9FA] px-3 py-2 text-sm text-[#1A1A1A] placeholder:text-[#4B5563] focus:border-[#0F4C81] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/20"
                   />
                   <button
                     onClick={handleSend}
                     disabled={!inputText.trim() || sending}
-                    className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#0F4C81] text-white transition-colors hover:bg-[#0a3d6b] disabled:opacity-50"
+                    aria-label="Invia messaggio"
+                    className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-[#0F4C81] text-white transition-colors hover:bg-[#0a3d6b] disabled:opacity-50"
                   >
-                    {sending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+                    {sending ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : <Send className="size-4" aria-hidden="true" />}
                   </button>
                 </div>
-                <p className="mt-1 text-right text-[10px] text-[#6B7280]">
+                <p className="mt-1 text-right text-xs text-[#4B5563]">
                   30 messaggi/minuto
                 </p>
               </div>
@@ -342,12 +358,12 @@ export default function MessagesPage() {
           </>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center text-center">
-            <MessageSquare className="mb-4 size-12 text-[#6B7280]" />
+            <MessageSquare className="mb-4 size-12 text-[#4B5563]" />
             <p className="text-sm font-medium text-[#1A1A1A]">Seleziona una conversazione</p>
-            <p className="mt-1 text-xs text-[#6B7280]">Scegli un thread dalla lista per iniziare a chattare</p>
+            <p className="mt-1 text-xs text-[#4B5563]">Scegli un thread dalla lista per iniziare a chattare</p>
           </div>
         )}
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }
